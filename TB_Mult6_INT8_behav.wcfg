@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="TB_Mult6_INT8_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="TB_Mult6_INT8" />
+            <top_module name="env" />
+            <top_module name="math_real" />
+            <top_module name="numeric_std" />
+            <top_module name="standard" />
+            <top_module name="std_logic_1164" />
+            <top_module name="std_logic_arith" />
+            <top_module name="std_logic_signed" />
+            <top_module name="std_logic_textio" />
+            <top_module name="std_logic_unsigned" />
+            <top_module name="textio" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="655,100.826 ns"></ZoomStartTime>
+      <ZoomEndTime time="655,453.835 ns"></ZoomEndTime>
+      <Cursor1Time time="655,285.210 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="276"></NameColumnWidth>
+      <ValueColumnWidth column_width="104"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="39" />
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/a_count">
+      <obj_property name="ElementShortName">a_count[7:0]</obj_property>
+      <obj_property name="ObjectShortName">a_count[7:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/b_count">
+      <obj_property name="ElementShortName">b_count[7:0]</obj_property>
+      <obj_property name="ObjectShortName">b_count[7:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/result0">
+      <obj_property name="ElementShortName">result0[14:0]</obj_property>
+      <obj_property name="ObjectShortName">result0[14:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/result_signed0">
+      <obj_property name="ElementShortName">result_signed0[14:0]</obj_property>
+      <obj_property name="ObjectShortName">result_signed0[14:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/result1">
+      <obj_property name="ElementShortName">result1[14:0]</obj_property>
+      <obj_property name="ObjectShortName">result1[14:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/result_signed1">
+      <obj_property name="ElementShortName">result_signed1[14:0]</obj_property>
+      <obj_property name="ObjectShortName">result_signed1[14:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/result_exact">
+      <obj_property name="ElementShortName">result_exact[15:0]</obj_property>
+      <obj_property name="ObjectShortName">result_exact[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/diff0">
+      <obj_property name="ElementShortName">diff0[15:0]</obj_property>
+      <obj_property name="ObjectShortName">diff0[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/max_diff0">
+      <obj_property name="ElementShortName">max_diff0[15:0]</obj_property>
+      <obj_property name="ObjectShortName">max_diff0[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/diff1">
+      <obj_property name="ElementShortName">diff1[15:0]</obj_property>
+      <obj_property name="ObjectShortName">diff1[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/max_diff1">
+      <obj_property name="ElementShortName">max_diff1[15:0]</obj_property>
+      <obj_property name="ObjectShortName">max_diff1[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_Mult6_INT8/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_Mult6_INT8/rst">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider66" type="divider">
+      <obj_property name="label">MUL_INST_1</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/a_i">
+      <obj_property name="ElementShortName">a_i[7:0]</obj_property>
+      <obj_property name="ObjectShortName">a_i[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/b_i">
+      <obj_property name="ElementShortName">b_i[7:0]</obj_property>
+      <obj_property name="ObjectShortName">b_i[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/result_o">
+      <obj_property name="ElementShortName">result_o[10:0]</obj_property>
+      <obj_property name="ObjectShortName">result_o[10:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/a">
+      <obj_property name="ElementShortName">a[7:0]</obj_property>
+      <obj_property name="ObjectShortName">a[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/b">
+      <obj_property name="ElementShortName">b[7:0]</obj_property>
+      <obj_property name="ObjectShortName">b[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/result_temp">
+      <obj_property name="ElementShortName">result_temp[10:0]</obj_property>
+      <obj_property name="ObjectShortName">result_temp[10:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps1_term1">
+      <obj_property name="ElementShortName">ps1_term1[4:0]</obj_property>
+      <obj_property name="ObjectShortName">ps1_term1[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps1_term2">
+      <obj_property name="ElementShortName">ps1_term2[4:0]</obj_property>
+      <obj_property name="ObjectShortName">ps1_term2[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps1_term3">
+      <obj_property name="ElementShortName">ps1_term3[4:0]</obj_property>
+      <obj_property name="ObjectShortName">ps1_term3[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps1">
+      <obj_property name="ElementShortName">ps1[4:0]</obj_property>
+      <obj_property name="ObjectShortName">ps1[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps2_term1">
+      <obj_property name="ElementShortName">ps2_term1[5:0]</obj_property>
+      <obj_property name="ObjectShortName">ps2_term1[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps2_term2">
+      <obj_property name="ElementShortName">ps2_term2[5:0]</obj_property>
+      <obj_property name="ObjectShortName">ps2_term2[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps2_term3">
+      <obj_property name="ElementShortName">ps2_term3[5:0]</obj_property>
+      <obj_property name="ObjectShortName">ps2_term3[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps2">
+      <obj_property name="ElementShortName">ps2[5:0]</obj_property>
+      <obj_property name="ObjectShortName">ps2[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps3_term1">
+      <obj_property name="ElementShortName">ps3_term1[5:0]</obj_property>
+      <obj_property name="ObjectShortName">ps3_term1[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps3_term2">
+      <obj_property name="ElementShortName">ps3_term2[5:0]</obj_property>
+      <obj_property name="ObjectShortName">ps3_term2[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps3_term3">
+      <obj_property name="ElementShortName">ps3_term3[5:0]</obj_property>
+      <obj_property name="ObjectShortName">ps3_term3[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps3">
+      <obj_property name="ElementShortName">ps3[5:0]</obj_property>
+      <obj_property name="ObjectShortName">ps3[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps4_term1">
+      <obj_property name="ElementShortName">ps4_term1[5:0]</obj_property>
+      <obj_property name="ObjectShortName">ps4_term1[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps4_term2">
+      <obj_property name="ElementShortName">ps4_term2[5:0]</obj_property>
+      <obj_property name="ObjectShortName">ps4_term2[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps4_term3">
+      <obj_property name="ElementShortName">ps4_term3[5:0]</obj_property>
+      <obj_property name="ObjectShortName">ps4_term3[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps4">
+      <obj_property name="ElementShortName">ps4[5:0]</obj_property>
+      <obj_property name="ObjectShortName">ps4[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps5_term1">
+      <obj_property name="ElementShortName">ps5_term1[2:0]</obj_property>
+      <obj_property name="ObjectShortName">ps5_term1[2:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps5_term2">
+      <obj_property name="ElementShortName">ps5_term2[2:0]</obj_property>
+      <obj_property name="ObjectShortName">ps5_term2[2:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_Mult6_INT8/MUL_INST_1/ps5">
+      <obj_property name="ElementShortName">ps5[2:0]</obj_property>
+      <obj_property name="ObjectShortName">ps5[2:0]</obj_property>
+   </wvobject>
+</wave_config>

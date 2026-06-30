@@ -1,0 +1,25 @@
+$ cat capstone.sim/sim_1/behav/xsim/elaborate.log
+Vivado Simulator v2026.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: /media/michaiah/efeaf11a-096c-4a5a-b74c-6c5521a783b5/HDL/2026.1/Vivado/bin/unwrapped/lnx64.o/xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L secureip --snapshot TB_Mult6_INT8_behav xil_defaultlib.TB_Mult6_INT8 -log elaborate.log 
+INFO: [XSIM 43-3493] Using 8 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package std.env
+Compiling package ieee.std_logic_1164
+Compiling package ieee.std_logic_arith
+Compiling package ieee.std_logic_signed
+Compiling package ieee.std_logic_unsigned
+Compiling package ieee.std_logic_textio
+Compiling package ieee.math_real
+Compiling package ieee.numeric_std
+Compiling architecture behavioral of entity xil_defaultlib.approximate_lut6_mult [approximate_lut6_mult_default]
+Compiling architecture behavioral of entity xil_defaultlib.approximate_lut6_mult [\approximate_lut6_mult(refinemen...]
+Compiling architecture behavioral of entity xil_defaultlib.tb_mult6_int8
+ERROR: [XSIM 43-3238] Failed to link the design.

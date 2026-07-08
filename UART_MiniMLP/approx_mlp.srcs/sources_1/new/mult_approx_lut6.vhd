@@ -20,6 +20,7 @@
 --  See ECCoLe_LICENSE
 ---------------------------------------------------------------------------------------------------
 
+-- modified by Stephen for combinatorial model instead of needing clock
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -69,20 +70,44 @@ architecture Behavioral of approximate_lut6_mult is
 
 begin
     --result_o <= a + b + c;
-    process(clk)
+--    process(clk)
+--    begin
+--        if (rising_edge(clk)) then
+--            if rst = '1' then
+--                a <= (others => '0');
+--                b <= (others => '0');
+--                result_o <= (others => '0');
+--            else
+--                a <= a_i;
+--                b <= b_i;
+--                result_o <= result_temp;
+--            end if;
+--        end if;
+--    end process;
+    REG_IO : if INOUT_BUF_EN = true generate
     begin
-        if (rising_edge(clk)) then
-            if rst = '1' then
-                a <= (others => '0');
-                b <= (others => '0');
-                result_o <= (others => '0');
-            else
-                a <= a_i;
-                b <= b_i;
-                result_o <= result_temp;
+        process(clk)
+        begin
+            if rising_edge(clk) then
+                if rst = '1' then
+                    a <= (others => '0');
+                    b <= (others => '0');
+                    result_o <= (others => '0');
+                else
+                    a <= a_i;
+                    b <= b_i;
+                    result_o <= result_temp;
+                end if;
             end if;
-        end if;
-    end process;
+        end process;
+    end generate;
+    
+    COMB_IO : if INOUT_BUF_EN = false generate
+    begin
+        a <= a_i;
+        b <= b_i;
+        result_o <= result_temp;
+    end generate;
 
     -- PS1
     ps1_term1   <= ("00" & not(a(5) and b(7)) & (a(5) and b(6)) & (a(5) and b(5))       );

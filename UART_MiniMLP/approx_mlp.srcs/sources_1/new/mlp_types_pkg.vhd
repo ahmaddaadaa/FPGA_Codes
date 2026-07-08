@@ -4,6 +4,9 @@ use ieee.numeric_std.all;
 
 package mlp_types_pkg is
 
+    --------------------------------------------------------------------
+    -- Current Step 1 test model: 4 -> 2 -> 2
+    --------------------------------------------------------------------
     constant NUM_INPUTS  : integer := 4;
     constant NUM_HIDDEN  : integer := 2;
     constant NUM_OUTPUTS : integer := 2;
@@ -11,13 +14,19 @@ package mlp_types_pkg is
     constant NUM_WEIGHTS : integer := 12;
     constant NUM_BIASES  : integer := 4;
 
-    subtype s8  is signed(7 downto 0);
-    subtype s32 is signed(31 downto 0);
+    --------------------------------------------------------------------
+    -- Address widths for current model
+    --
+    -- input  depth = 4  -> 2 bits
+    -- weight depth = 12 -> 4 bits
+    -- bias   depth = 4  -> 2 bits
+    --------------------------------------------------------------------
+    constant INPUT_ADDR_WIDTH  : integer := 2;
+    constant WEIGHT_ADDR_WIDTH : integer := 4;
+    constant BIAS_ADDR_WIDTH   : integer := 2;
 
-    type input_mem_t  is array (0 to NUM_INPUTS - 1) of s8;
-    type weight_mem_t is array (0 to NUM_WEIGHTS - 1) of s8;
-    type bias_mem_t   is array (0 to NUM_BIASES - 1) of s32;
-    type hidden_mem_t is array (0 to NUM_HIDDEN - 1) of s8;
-    type output_mem_t is array (0 to NUM_OUTPUTS - 1) of s32;
+    subtype s8  is signed(7 downto 0);
+    subtype s16 is signed(15 downto 0);
+    subtype s32 is signed(31 downto 0);
 
 end package;

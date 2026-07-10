@@ -1,0 +1,8 @@
+//exact
+py uart_mlp_mnist_test.py --port COM8 --checkpoint mnist_fpga_mlp_64_32.pt --mnist-test --mnist-count 100 --input-scale 1 --w1-scale 16 --w2-scale 16 --w3-scale 16 --hidden1-shift 0 --hidden2-shift 0 --reload-weights --exact --show-confusion'
+
+//mul8s_1L2H
+py uart_mlp_mnist_test.py --port COM8 --checkpoint mnist_fpga_mlp_64_32.pt --mnist-test --mnist-count 100 --input-scale 2 --w1-scale 160 --w2-scale 160 --w3-scale 160 --hidden1-shift 3 --hidden2-shift 8 --approx-lut-header .\mul8s_1L2H.h --reload-weights --show-confusion
+
+//Vakili
+py uart_mlp_mnist_test.py --port COM8 --checkpoint mnist_fpga_mlp_64_32.pt --mnist-test --mnist-count 100 --input-scale 4 --w1-scale 224 --w2-scale 224 --w3-scale 224 --hidden1-shift 3 --hidden2-shift 9 --approx-lut-header .\vakili_wrapper_generated_clean.h --reload-weights --show-confusion

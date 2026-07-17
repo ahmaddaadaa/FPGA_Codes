@@ -1,0 +1,42 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2026.1 (win64) Build 6511674 Tue Jun 16 11:02:23 MDT 2026
+| Date         : Fri Jul 17 09:10:10 2026
+| Host         : Zeneca running 64-bit major release  (build 9200)
+| Command      : report_utilization -hierarchical -hierarchical_depth 8 -file C:/Dev/fpgaProject/.cache/p16_resource_comparison/vakili_r1/images/core/vivado/reports/post_route_utilization_hierarchical.rpt
+| Design       : tiny_mlp_accelerator_bram
+| Device       : xc7a100tcsg324-1
+| Speed File   : -1
+| Design State : Routed
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++------------------------------------------------------------+-------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+|                          Instance                          |                            Module                           | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | DSP Blocks |
++------------------------------------------------------------+-------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+| tiny_mlp_accelerator_bram                                  |                                                       (top) |       2975 |       2747 |     224 |    4 | 2862 |     16 |      3 |          0 |
+|   (tiny_mlp_accelerator_bram)                              |                                                       (top) |          0 |          0 |       0 |    0 |  324 |      0 |      0 |          0 |
+|   u_hls_core                                               |                                           vakili_r1_p16_top |       2684 |       2456 |     224 |    4 | 2538 |      0 |      0 |          0 |
+|     grp_vakili_r1_p16_fu_56                                |                             vakili_r1_p16_top_vakili_r1_p16 |       2679 |       2451 |     224 |    4 | 2535 |      0 |      0 |          0 |
+|       (grp_vakili_r1_p16_fu_56)                            |                             vakili_r1_p16_top_vakili_r1_p16 |         52 |         52 |       0 |    0 |  554 |      0 |      0 |          0 |
+|       grp_vakili_r1_p16_Pipeline_layer1_inputs_fu_1348     |      vakili_r1_p16_top_vakili_r1_p16_Pipeline_layer1_inputs |        616 |        616 |       0 |    0 |  531 |      0 |      0 |          0 |
+|         (grp_vakili_r1_p16_Pipeline_layer1_inputs_fu_1348) |      vakili_r1_p16_top_vakili_r1_p16_Pipeline_layer1_inputs |        132 |        132 |       0 |    0 |  529 |      0 |      0 |          0 |
+|         flow_control_loop_pipe_sequential_init_U           | vakili_r1_p16_top_flow_control_loop_pipe_sequential_init_62 |        484 |        484 |       0 |    0 |    2 |      0 |      0 |          0 |
+|       grp_vakili_r1_p16_Pipeline_layer2_inputs_fu_1421     |      vakili_r1_p16_top_vakili_r1_p16_Pipeline_layer2_inputs |        738 |        736 |       0 |    2 |  478 |      0 |      0 |          0 |
+|         (grp_vakili_r1_p16_Pipeline_layer2_inputs_fu_1421) |      vakili_r1_p16_top_vakili_r1_p16_Pipeline_layer2_inputs |        274 |        272 |       0 |    2 |  476 |      0 |      0 |          0 |
+|         flow_control_loop_pipe_sequential_init_U           | vakili_r1_p16_top_flow_control_loop_pipe_sequential_init_61 |        465 |        465 |       0 |    0 |    2 |      0 |      0 |          0 |
+|       grp_vakili_r1_p16_Pipeline_layer3_inputs_fu_1508     |      vakili_r1_p16_top_vakili_r1_p16_Pipeline_layer3_inputs |        785 |        783 |       0 |    2 |  454 |      0 |      0 |          0 |
+|         (grp_vakili_r1_p16_Pipeline_layer3_inputs_fu_1508) |      vakili_r1_p16_top_vakili_r1_p16_Pipeline_layer3_inputs |        472 |        470 |       0 |    2 |  452 |      0 |      0 |          0 |
+|         flow_control_loop_pipe_sequential_init_U           |    vakili_r1_p16_top_flow_control_loop_pipe_sequential_init |        313 |        313 |       0 |    0 |    2 |      0 |      0 |          0 |
++------------------------------------------------------------+-------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+* Note: The sum of lower-level cells may be larger than their parent cells total, due to cross-hierarchy LUT combining
+
+

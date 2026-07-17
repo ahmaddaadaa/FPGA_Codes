@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "model_name": "Vakili P16 approximate MNIST model",
+  "arithmetic": "Vakili refinement-1 approximate INT8",
+  "architecture": {
+    "topology": [
+      784,
+      64,
+      32,
+      10
+    ],
+    "hidden_activation": "ReLU followed by positive clamp to signed INT8",
+    "output": "signed INT32 logits with first-index argmax"
+  },
+  "quantization_contract": {
+    "input_scale": 127.0,
+    "weight_scales": [
+      271.2089109302831,
+      62.75471829704937,
+      142.2095936289867
+    ],
+    "hidden_shifts": [
+      9,
+      9
+    ],
+    "input_storage": "signed INT8, runtime range 0..127",
+    "weight_storage": "signed INT8",
+    "bias_storage": "signed INT32",
+    "product_storage": "signed INT16",
+    "accumulator_storage": "signed INT32",
+    "requantization": "if accumulator < 0 output 0; otherwise arithmetic right shift and clamp to 127",
+    "runtime_floating_point_required": false
+  },
+  "artifacts": {
+    "integer_tensors": {
+      "repository_path": "models/vakili/tensors.npz",
+      "tensor_sha256": {
+        "b1": "dcb8771238ed8e00bfeaf9bacef8c83eaa4b95fc3b81ecceaf3f272154feb89d",
+        "b2": "88d522a5f63858b6f910af3b3c8ec193cb378f61dd87527d1f9958989759abf9",
+        "b3": "978db7fd929dd56c6e315791b3943b530ceb5891d2ab80fc195aadd1de18053c",
+        "w1": "309bc54c69a59b93e954ad56e917d5a9a099f570607d9000da29dc0c274af22d",
+        "w2": "1bdf0904391b75a457fe91be197b229253eda6978b60af9c50a4d41ad70172e2",
+        "w3": "287e36602a150ce00f406db3923aec4c7ec5fa0acc68fa9a9abb5cd7cc2b3802"
+      },
+      "sha256": "851294e5e760d3dc013e44736ca457b50a8faa9b9fbf3f4c19658c64d9800081"
+    }
+  },
+  "development_validation": {
+    "correct": 9807,
+    "total": 10000,
+    "accuracy": 0.9807,
+    "initial_fixed_r1_ptq_correct": 9763,
+    "hardware_exact_int8_correct": 9811,
+    "correct_recovered_from_ptq": 44,
+    "remaining_correct_gap_to_exact": 4,
+    "recovery_fraction_of_ptq_gap": 0.9166666666666666
+  }
+}

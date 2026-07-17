@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "model_name": "P16 exact MNIST reference model",
+  "arithmetic": "exact signed INT8",
+  "architecture": {
+    "type": "batchnorm-folded MLP",
+    "layers": [
+      784,
+      64,
+      32,
+      10
+    ],
+    "parallel_lanes": 16,
+    "weight_bank_depth": 3296
+  },
+  "quantization_contract": {
+    "input_scale": 127.0,
+    "weight_scales": [
+      271.2089109302831,
+      62.75471829704937,
+      142.2095936289867
+    ],
+    "hidden_shifts": [
+      9,
+      9
+    ],
+    "activation_scales": {
+      "input": 127.0,
+      "hidden1": 67.27252282841006,
+      "hidden2": 8.245445740681047,
+      "logit_accumulator": 1172.5814880721111
+    },
+    "input_integer_range": [
+      0,
+      127
+    ],
+    "weight_integer_range": [
+      -127,
+      127
+    ],
+    "offline_rounding": "round to nearest, ties to even (numpy.rint)",
+    "product": "exact signed INT8 x signed INT8 to signed INT16",
+    "accumulator": "signed INT32",
+    "requantization": "if accumulator < 0 output 0; otherwise arithmetic right shift",
+    "hidden_saturation": "clip positive shifted value to 127",
+    "output": "signed INT32 logits with first-index argmax"
+  },
+  "artifacts": {
+    "integer_tensors": {
+      "repository_path": "models/exact/tensors.npz",
+      "tensor_sha256": {
+        "w1": "b2b111b27c02f2de38a4a72809212cbb0d9de36c725319256eed869edbf05187",
+        "w2": "06b1b56a5a6c9acea3754455ca8021e6f496308db04ed07d9d7b1b74b2e55442",
+        "w3": "bdc0dbe737ce38e17e0dfef626896b854ade92303f04f7738f8e4e882162192f",
+        "b1": "f99119808213eb1e08b81680e6a6a79dd87aa1392b769d3db854f3a167f5f371",
+        "b2": "094377cba677247f4c4a179d7adf1708afd217b0d60932ab91461692ef93b45b",
+        "b3": "7675eefdb1a54aee4cf3d26ff521b28b6f3cd42e0cca55be28dfcdbb0dd2a1c8"
+      }
+    }
+  },
+  "development_validation": {
+    "fp32_folded_correct": 9812,
+    "adapt_exact_int8_correct": 9811,
+    "hardware_exact_int8_correct": 9811,
+    "total": 10000,
+    "hardware_exact_int8_accuracy": 0.9811,
+    "hardware_exact_int8_loss": 0.06305772490364842,
+    "prediction_disagreements_with_fp32": 12,
+    "prediction_disagreements_with_adapt_exact": 16,
+    "int32_overflows": 0
+  }
+}

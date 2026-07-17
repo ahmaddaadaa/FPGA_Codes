@@ -1,0 +1,62 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2026.1 (win64) Build 6511674 Tue Jun 16 11:02:23 MDT 2026
+| Date         : Fri Jul 17 08:42:58 2026
+| Host         : Zeneca running 64-bit major release  (build 9200)
+| Command      : report_utilization -hierarchical -hierarchical_depth 8 -file C:/Dev/fpgaProject/.cache/p16_resource_comparison/exact/images/uart/vivado/reports/post_route_utilization_hierarchical.rpt
+| Design       : tiny_mlp_uart_top
+| Device       : xc7a100tcsg324-1
+| Speed File   : -1
+| Design State : Routed
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++-------------------------------------------------------------------+-------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+|                              Instance                             |                            Module                           | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | DSP Blocks |
++-------------------------------------------------------------------+-------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+| tiny_mlp_uart_top                                                 |                                                       (top) |       5601 |       5377 |     224 |    0 | 4079 |     16 |      3 |          0 |
+|   (tiny_mlp_uart_top)                                             |                                                       (top) |        196 |        196 |       0 |    0 |  828 |      0 |      0 |          0 |
+|   u_mlp                                                           |                                   tiny_mlp_accelerator_bram |       5238 |       5014 |     224 |    0 | 3193 |     16 |      3 |          0 |
+|     (u_mlp)                                                       |                                   tiny_mlp_accelerator_bram |        332 |        332 |       0 |    0 |  323 |      0 |      0 |          0 |
+|     u_hls_core                                                    |                                           vakili_r1_p16_top |       3609 |       3385 |     224 |    0 | 2870 |      0 |      0 |          0 |
+|       grp_hardware_exact_p16_fu_56                                |                        vakili_r1_p16_top_hardware_exact_p16 |       3584 |       3360 |     224 |    0 | 2867 |      0 |      0 |          0 |
+|         (grp_hardware_exact_p16_fu_56)                            |                        vakili_r1_p16_top_hardware_exact_p16 |         51 |         51 |       0 |    0 |  576 |      0 |      0 |          0 |
+|         grp_hardware_exact_p16_Pipeline_layer1_inputs_fu_1348     | vakili_r1_p16_top_hardware_exact_p16_Pipeline_layer1_inputs |       1375 |       1375 |       0 |    0 |  783 |      0 |      0 |          0 |
+|           (grp_hardware_exact_p16_Pipeline_layer1_inputs_fu_1348) | vakili_r1_p16_top_hardware_exact_p16_Pipeline_layer1_inputs |        132 |        132 |       0 |    0 |  781 |      0 |      0 |          0 |
+|           flow_control_loop_pipe_sequential_init_U                | vakili_r1_p16_top_flow_control_loop_pipe_sequential_init_72 |        548 |        548 |       0 |    0 |    2 |      0 |      0 |          0 |
+|         grp_hardware_exact_p16_Pipeline_layer2_inputs_fu_1421     | vakili_r1_p16_top_hardware_exact_p16_Pipeline_layer2_inputs |       1204 |       1204 |       0 |    0 |  788 |      0 |      0 |          0 |
+|           (grp_hardware_exact_p16_Pipeline_layer2_inputs_fu_1421) | vakili_r1_p16_top_hardware_exact_p16_Pipeline_layer2_inputs |        181 |        181 |       0 |    0 |  786 |      0 |      0 |          0 |
+|           flow_control_loop_pipe_sequential_init_U                | vakili_r1_p16_top_flow_control_loop_pipe_sequential_init_55 |        528 |        528 |       0 |    0 |    2 |      0 |      0 |          0 |
+|         grp_hardware_exact_p16_Pipeline_layer3_inputs_fu_1508     | vakili_r1_p16_top_hardware_exact_p16_Pipeline_layer3_inputs |        735 |        735 |       0 |    0 |  496 |      0 |      0 |          0 |
+|           (grp_hardware_exact_p16_Pipeline_layer3_inputs_fu_1508) | vakili_r1_p16_top_hardware_exact_p16_Pipeline_layer3_inputs |        212 |        212 |       0 |    0 |  494 |      0 |      0 |          0 |
+|           flow_control_loop_pipe_sequential_init_U                |    vakili_r1_p16_top_flow_control_loop_pipe_sequential_init |        333 |        333 |       0 |    0 |    2 |      0 |      0 |          0 |
+|     u_input_ram                                                   |                                                 sync_ram_s8 |        352 |        352 |       0 |    0 |    0 |      0 |      1 |          0 |
+|     weight_banks[0].u_weight_ram                                  |                                 sync_ram_s8__parameterized0 |         93 |         93 |       0 |    0 |    0 |      1 |      0 |          0 |
+|     weight_banks[10].u_weight_ram                                 |                               sync_ram_s8__parameterized0_1 |         52 |         52 |       0 |    0 |    0 |      1 |      0 |          0 |
+|     weight_banks[11].u_weight_ram                                 |                               sync_ram_s8__parameterized0_2 |         52 |         52 |       0 |    0 |    0 |      1 |      0 |          0 |
+|     weight_banks[12].u_weight_ram                                 |                               sync_ram_s8__parameterized0_3 |         52 |         52 |       0 |    0 |    0 |      1 |      0 |          0 |
+|     weight_banks[13].u_weight_ram                                 |                               sync_ram_s8__parameterized0_4 |         52 |         52 |       0 |    0 |    0 |      1 |      0 |          0 |
+|     weight_banks[14].u_weight_ram                                 |                               sync_ram_s8__parameterized0_5 |         52 |         52 |       0 |    0 |    0 |      1 |      0 |          0 |
+|     weight_banks[15].u_weight_ram                                 |                               sync_ram_s8__parameterized0_6 |         57 |         57 |       0 |    0 |    0 |      1 |      0 |          0 |
+|     weight_banks[1].u_weight_ram                                  |                               sync_ram_s8__parameterized0_7 |         93 |         93 |       0 |    0 |    0 |      1 |      0 |          0 |
+|     weight_banks[2].u_weight_ram                                  |                               sync_ram_s8__parameterized0_8 |         93 |         93 |       0 |    0 |    0 |      1 |      0 |          0 |
+|     weight_banks[3].u_weight_ram                                  |                               sync_ram_s8__parameterized0_9 |         93 |         93 |       0 |    0 |    0 |      1 |      0 |          0 |
+|     weight_banks[4].u_weight_ram                                  |                              sync_ram_s8__parameterized0_10 |         93 |         93 |       0 |    0 |    0 |      1 |      0 |          0 |
+|     weight_banks[5].u_weight_ram                                  |                              sync_ram_s8__parameterized0_11 |         93 |         93 |       0 |    0 |    0 |      1 |      0 |          0 |
+|     weight_banks[6].u_weight_ram                                  |                              sync_ram_s8__parameterized0_12 |         93 |         93 |       0 |    0 |    0 |      1 |      0 |          0 |
+|     weight_banks[7].u_weight_ram                                  |                              sync_ram_s8__parameterized0_13 |         93 |         93 |       0 |    0 |    0 |      1 |      0 |          0 |
+|     weight_banks[8].u_weight_ram                                  |                              sync_ram_s8__parameterized0_14 |         93 |         93 |       0 |    0 |    0 |      1 |      0 |          0 |
+|     weight_banks[9].u_weight_ram                                  |                              sync_ram_s8__parameterized0_15 |         94 |         94 |       0 |    0 |    0 |      1 |      0 |          0 |
+|   u_rx                                                            |                                                     uart_rx |        143 |        143 |       0 |    0 |   34 |      0 |      0 |          0 |
++-------------------------------------------------------------------+-------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+* Note: The sum of lower-level cells may be larger than their parent cells total, due to cross-hierarchy LUT combining
+
+

@@ -1,0 +1,117 @@
+﻿{
+    "schema_version":  1,
+    "status":  "PASS",
+    "comparison_contract":  {
+                                "topology":  "784-64-32-10",
+                                "parallel_lanes":  16,
+                                "weight_banks":  16,
+                                "weight_bank_depth":  3296,
+                                "hidden_shifts":  [
+                                                      9,
+                                                      9
+                                                  ],
+                                "exact_multiplier":  "signed INT8 x signed INT8, fabric-bound",
+                                "approximate_multiplier":  "weight-first Vakili refinement-1",
+                                "core_measurement":  "out-of-context routed accelerator adapter with dynamic parameter ports and full output bus",
+                                "controlled_variables":  [
+                                                             "HLS loop structure",
+                                                             "P16 memory banking",
+                                                             "INT8/INT16/INT32 data widths",
+                                                             "Vivado top-level shell",
+                                                             "constraints",
+                                                             "target part",
+                                                             "100 MHz clock"
+                                                         ]
+                            },
+    "target":  {
+                   "board":  "Nexys A7-100T",
+                   "part":  "xc7a100tcsg324-1",
+                   "clock_period_ns":  10
+               },
+    "images":  {
+                   "vakili_r1":  {
+                                     "core":  {
+                                                  "arithmetic":  "vakili_r1",
+                                                  "arithmetic_name":  "Vakili R1 approximate",
+                                                  "image_kind":  "core",
+                                                  "measurement_mode":  "out_of_context_routed",
+                                                  "display_name":  "Vakili R1 approximate core",
+                                                  "top":  "tiny_mlp_accelerator_bram",
+                                                  "timing":  {
+                                                                 "wns_ns":  1.734,
+                                                                 "whs_ns":  0.151
+                                                             },
+                                                  "resources":  {
+                                                                    "lut":  2975,
+                                                                    "ff":  2862,
+                                                                    "bram_tile":  17.5,
+                                                                    "dsp":  0
+                                                                },
+                                                  "artifacts":  {
+                                                                    "bitstream":  null,
+                                                                    "routed_checkpoint":  "C:/Dev/fpgaProject/.cache/p16_resource_comparison/vakili_r1/images/core/vivado/reports/post_route_core.dcp",
+                                                                    "project":  "C:/Dev/fpgaProject/.cache/p16_resource_comparison/vakili_r1/images/core/vivado/project/vakili_r1_p16_core.xpr",
+                                                                    "flat_utilization_report":  "C:/Dev/fpgaProject/.cache/p16_resource_comparison/vakili_r1/images/core/vivado/reports/post_route_utilization.rpt",
+                                                                    "hierarchical_utilization_report":  "C:/Dev/fpgaProject/.cache/p16_resource_comparison/vakili_r1/images/core/vivado/reports/post_route_utilization_hierarchical.rpt",
+                                                                    "timing_report":  "C:/Dev/fpgaProject/.cache/p16_resource_comparison/vakili_r1/images/core/vivado/reports/post_route_timing.rpt",
+                                                                    "build_log":  "C:\\Dev\\fpgaProject\\.cache\\p16_resource_comparison\\vakili_r1\\images\\core\\vivado\\logs\\image_build.log"
+                                                                }
+                                              }
+                                 },
+                   "exact":  {
+                                 "core":  {
+                                              "arithmetic":  "exact",
+                                              "arithmetic_name":  "Exact signed INT8",
+                                              "image_kind":  "core",
+                                              "measurement_mode":  "out_of_context_routed",
+                                              "display_name":  "Exact signed INT8 core",
+                                              "top":  "tiny_mlp_accelerator_bram",
+                                              "timing":  {
+                                                             "wns_ns":  0.657,
+                                                             "whs_ns":  0.148
+                                                         },
+                                              "resources":  {
+                                                                "lut":  4933,
+                                                                "ff":  3194,
+                                                                "bram_tile":  17.5,
+                                                                "dsp":  0
+                                                            },
+                                              "artifacts":  {
+                                                                "bitstream":  null,
+                                                                "routed_checkpoint":  "C:/Dev/fpgaProject/.cache/p16_resource_comparison/exact/images/core/vivado/reports/post_route_core.dcp",
+                                                                "project":  "C:/Dev/fpgaProject/.cache/p16_resource_comparison/exact/images/core/vivado/project/exact_p16_core.xpr",
+                                                                "flat_utilization_report":  "C:/Dev/fpgaProject/.cache/p16_resource_comparison/exact/images/core/vivado/reports/post_route_utilization.rpt",
+                                                                "hierarchical_utilization_report":  "C:/Dev/fpgaProject/.cache/p16_resource_comparison/exact/images/core/vivado/reports/post_route_utilization_hierarchical.rpt",
+                                                                "timing_report":  "C:/Dev/fpgaProject/.cache/p16_resource_comparison/exact/images/core/vivado/reports/post_route_timing.rpt",
+                                                                "build_log":  "C:\\Dev\\fpgaProject\\.cache\\p16_resource_comparison\\exact\\images\\core\\vivado\\logs\\image_build.log"
+                                                            }
+                                          }
+                             }
+               },
+    "interface_resource_deltas":  {
+                                      "vakili_r1":  {
+
+                                                    },
+                                      "exact":  {
+
+                                                }
+                                  },
+    "exact_vs_approximate_resource_deltas":  {
+                                                 "core":  {
+                                                              "approximate_minus_exact":  {
+                                                                                              "lut":  -1958,
+                                                                                              "ff":  -332,
+                                                                                              "bram_tile":  0,
+                                                                                              "dsp":  0
+                                                                                          },
+                                                              "interpretation":  "Negative values mean the Vakili R1 image uses fewer resources."
+                                                          }
+                                             },
+    "notes":  [
+                  "Core-only exact versus Vakili is the cleanest multiplier-cost comparison.",
+                  "Core results are routed out of context and produce a DCP rather than a programmable bitstream.",
+                  "Weights are runtime-loaded and do not change synthesized resource use.",
+                  "Use each image\u0027s hierarchical utilization report for module attribution.",
+                  "The exact image can load either the frozen exact-INT8 tensors or the R1-aware tensors."
+              ]
+}

@@ -1,0 +1,327 @@
+{
+  "schema_version": 1,
+  "package": "Vakili_P16_FPGA",
+  "target": "Digilent Nexys A7-100T / xc7a100tcsg324-1",
+  "files": [
+    {
+      "path": "bitstreams/Exact_P16_Ethernet.bit",
+      "bytes": 1288119,
+      "sha256": "60ee8026eb504b2b532f7741972bf689594aab9dcae10baa12be51aeccff90b4"
+    },
+    {
+      "path": "bitstreams/Exact_P16_UART.bit",
+      "bytes": 3825997,
+      "sha256": "9a2e8c0b454a69c0dcbb3b3f0e6a704a117bd0f5dd8910689a8f6eca8916fd2d"
+    },
+    {
+      "path": "bitstreams/Vakili_P16_Ethernet.bit",
+      "bytes": 1206119,
+      "sha256": "797deac6f54500314b25004c740ec4d63a2db4fb1b2c745719507c9f5abaef1b"
+    },
+    {
+      "path": "bitstreams/Vakili_P16_UART.bit",
+      "bytes": 3825997,
+      "sha256": "d47de626ec8c442b8fdb48528bc37dafa234b929f81b9612a277556da8b021e5"
+    },
+    {
+      "path": "host/runtime/scripts/evaluate_fixed_vakili_r1_ptq.py",
+      "bytes": 11353,
+      "sha256": "ac253a8ca5ee0b139d43f78af83f5083f75b8c060d6b6822289ff0c06908136c"
+    },
+    {
+      "path": "host/runtime/scripts/export_hardware_exact_p16_reference.py",
+      "bytes": 16120,
+      "sha256": "ead4da405bf65448263f90917825c975c2c374c4e51a9640eb67939f9caba711"
+    },
+    {
+      "path": "host/runtime/scripts/load_vakili_r1_aware_p16_ethernet_parameters.py",
+      "bytes": 3783,
+      "sha256": "7d630e4af5f06d3883cce190bf945b29415897ee866343c887498e2c3d0ed345"
+    },
+    {
+      "path": "host/runtime/scripts/vakili_r1_reference.py",
+      "bytes": 6690,
+      "sha256": "8c851c1d1168747ae13e03d74c7f2d1a75695e14f0e821bbab11f01e9801a70b"
+    },
+    {
+      "path": "host/runtime/scripts/verify_vakili_r1_aware_p16_ethernet.py",
+      "bytes": 20265,
+      "sha256": "e7017209ec5365e54f9639a8cb489e64fcfb922f639732c1c2f1d512968b63a3"
+    },
+    {
+      "path": "host/runtime/scripts/verify_vakili_r1_aware_p16_uart.py",
+      "bytes": 30877,
+      "sha256": "bef9dae11f7e1d978bd3813678907cf6082348a3113ef9f0ce1b4470b94f3e60"
+    },
+    {
+      "path": "models/exact/manifest.json",
+      "bytes": 2265,
+      "sha256": "03a388dd823fee0f5d89b1ba367f3fcaeff0200e9f8c663980e0fd77ad6611a9"
+    },
+    {
+      "path": "models/exact/tensors.npz",
+      "bytes": 40629,
+      "sha256": "20e9426fe6b99dac43ecbcb17a73e77671de4554de55a26b9b1660cc6c36eeee"
+    },
+    {
+      "path": "models/vakili/manifest.json",
+      "bytes": 2024,
+      "sha256": "8f095fc83342bb883a53f8c59fb2b91c4085a490b141991996988fea59b578ab"
+    },
+    {
+      "path": "models/vakili/tensors.npz",
+      "bytes": 40673,
+      "sha256": "851294e5e760d3dc013e44736ca457b50a8faa9b9fbf3f4c19658c64d9800081"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2002,
+      "sha256": "65a27b455230e1dc27e9a5a1ff95c67aa2b31ed77eff76add67a4cd2067f1d66"
+    },
+    {
+      "path": "reports/checkpoints/Exact_P16_Core.dcp",
+      "bytes": 3894078,
+      "sha256": "245430701f55072fb3d30d97716874b1114f09e2c3c5ae044b41edb9d48d1084"
+    },
+    {
+      "path": "reports/checkpoints/Vakili_P16_Core.dcp",
+      "bytes": 2513382,
+      "sha256": "2f3ec9f4edafbee0b38f59880d592fee3579237a452506cdc20c9d78847be0d6"
+    },
+    {
+      "path": "reports/exact/core/post_route_timing.rpt",
+      "bytes": 21353,
+      "sha256": "4d7302958ec69003f856c96f33aa6fe53b68fef435e813e15b1ac87da25edbd7"
+    },
+    {
+      "path": "reports/exact/core/post_route_utilization.rpt",
+      "bytes": 11136,
+      "sha256": "6e7fe7af0cf5d24d42e526d9c92c5a41d9b6068471a97a60481e254fe576f538"
+    },
+    {
+      "path": "reports/exact/core/post_route_utilization_hierarchical.rpt",
+      "bytes": 8704,
+      "sha256": "570825deb6414a9a642a285136f78e875ed754a6b0afba1318ed86955b73006e"
+    },
+    {
+      "path": "reports/exact/ethernet/post_route_timing.rpt",
+      "bytes": 36086,
+      "sha256": "36dbc40febe10fc66c836cb366c3b72b93b1ac292f77cdff48aaefa700789215"
+    },
+    {
+      "path": "reports/exact/ethernet/post_route_utilization.rpt",
+      "bytes": 11709,
+      "sha256": "f487b7a6ac2c546402b289b9bbc3b9a88928a6e5b1446b05f8f172990fc5d07a"
+    },
+    {
+      "path": "reports/exact/ethernet/post_route_utilization_hierarchical.rpt",
+      "bytes": 9421,
+      "sha256": "3a9d85a4b23b6c1f2a6d4e8bdb3aee7be3bf2cf0f0d5aac89baec91b23d379db"
+    },
+    {
+      "path": "reports/exact/uart/post_route_timing.rpt",
+      "bytes": 22629,
+      "sha256": "ad420eababa8f0e79307090fb51c1268b2cc0c42adc04693080e8f9d7b170e72"
+    },
+    {
+      "path": "reports/exact/uart/post_route_utilization.rpt",
+      "bytes": 11419,
+      "sha256": "65b8dc7dd2c0e13d8b68a42165b14951564e9b8903a8bd5d39c36b23902357cf"
+    },
+    {
+      "path": "reports/exact/uart/post_route_utilization_hierarchical.rpt",
+      "bytes": 9405,
+      "sha256": "57a612f43b6a84d4a3d5bf97c950264ff516d3ed34fcf1249acebffe5a7a6900"
+    },
+    {
+      "path": "reports/exact_vs_vakili_resource_comparison.json",
+      "bytes": 9361,
+      "sha256": "ddff483364f38cd022685734bd0c9fd8ecabb618b94e360fa3e11f4b7783a51f"
+    },
+    {
+      "path": "reports/vakili/core/post_route_timing.rpt",
+      "bytes": 23151,
+      "sha256": "a2653f9f409878a2331649c69b30aaac4352906314afa6ac6f719a033108a03e"
+    },
+    {
+      "path": "reports/vakili/core/post_route_utilization.rpt",
+      "bytes": 11179,
+      "sha256": "86029d9c0ca0293676de7e7448d62d0b4a7a457dca80fb98773db7d23650261b"
+    },
+    {
+      "path": "reports/vakili/core/post_route_utilization_hierarchical.rpt",
+      "bytes": 5039,
+      "sha256": "df32b5e3b1378589fae63588bc2bd5f4c243a0fb603ec24bca4a33e49883877f"
+    },
+    {
+      "path": "reports/vakili/ethernet/post_route_timing.rpt",
+      "bytes": 36100,
+      "sha256": "d2b75c35df5849bda4fb6934c242ecf747abad64be396f853b1bbd50cc83375a"
+    },
+    {
+      "path": "reports/vakili/ethernet/post_route_utilization.rpt",
+      "bytes": 11752,
+      "sha256": "22409962212fbf376a796900d03f1f912d91bc818ab29f3f247b6d5d41e558ed"
+    },
+    {
+      "path": "reports/vakili/ethernet/post_route_utilization_hierarchical.rpt",
+      "bytes": 5707,
+      "sha256": "95028123c13fd537234ebcf9e578dc79748622765e1fddb9cc84d3e931837551"
+    },
+    {
+      "path": "reports/vakili/uart/post_route_timing.rpt",
+      "bytes": 22648,
+      "sha256": "3505cbd14839d8b69c9eeb1f5a20915bb8c8131523540f8c6956a1fadd7e96f1"
+    },
+    {
+      "path": "reports/vakili/uart/post_route_utilization.rpt",
+      "bytes": 11462,
+      "sha256": "65ece5afbc55bab3e323f38f127c039411e2bb2968a224beb4df4c7d83101eeb"
+    },
+    {
+      "path": "reports/vakili/uart/post_route_utilization_hierarchical.rpt",
+      "bytes": 5691,
+      "sha256": "b0550a242b258e4ff117015fb09caddc8e9b5db02a8c4955785f33e370f3ec57"
+    },
+    {
+      "path": "requirements.txt",
+      "bytes": 37,
+      "sha256": "18cd0806e1b2dd2d1fedd80cb554c95b44c72db25c84264b3ec261563dce1cfa"
+    },
+    {
+      "path": "RUN_EXACT_MNIST_TEST.cmd",
+      "bytes": 726,
+      "sha256": "437a61755e0d0566750abb476a974d83994ba92984e347954b9e23e8f1e09a34"
+    },
+    {
+      "path": "RUN_MNIST_TEST.cmd",
+      "bytes": 731,
+      "sha256": "5a04e8cb5f46cdc41862304d0eb19549514a1beb01c4b76032e07136bafb4406"
+    },
+    {
+      "path": "SETUP.cmd",
+      "bytes": 440,
+      "sha256": "2b91f779d2738b6f39a1beac24785f2925061e8325da1f59d5d6d6759b1e905c"
+    },
+    {
+      "path": "source/fpga/common/mlp_types_pkg.vhd",
+      "bytes": 1547,
+      "sha256": "b88d125b9af567c39cd8142fc0e2f43c3f5bb2ba3c755248dc1abcd07c493d24"
+    },
+    {
+      "path": "source/fpga/common/sync_ram_s32.vhd",
+      "bytes": 1356,
+      "sha256": "66ba74f1f7c4d3406398408d81bd3f1e5a99d0ecedab4751a939655fd755f03c"
+    },
+    {
+      "path": "source/fpga/common/sync_ram_s8.vhd",
+      "bytes": 1352,
+      "sha256": "6346e2a32912e5abd1686d80d1a7fb5b4f57b7f9ba2e4c71e94fb52dd438279d"
+    },
+    {
+      "path": "source/fpga/common/uart_rx.vhd",
+      "bytes": 5456,
+      "sha256": "7a0fad4464fd4bbf9a158674e461f273509ef14ae42e4d5ed3df7365027cc68f"
+    },
+    {
+      "path": "source/fpga/common/uart_tx.vhd",
+      "bytes": 3427,
+      "sha256": "8feb0c7fe12e2cdf4f5c8883906ae800682fad68afc662bf0a5a68ec1eeac412"
+    },
+    {
+      "path": "source/fpga/nexysa7_core_only.xdc",
+      "bytes": 672,
+      "sha256": "6c834b1da7ca609ee9b9875df7aff50bd274cfab99eefeece55fc0b16751e718"
+    },
+    {
+      "path": "source/fpga/nexysa7_ethernet.xdc",
+      "bytes": 2242,
+      "sha256": "61cc0c2336f93f86e5ec35107b151b32ca1c0060a143e9ab4aa47ea6f1009215"
+    },
+    {
+      "path": "source/fpga/nexysa7_uart.xdc",
+      "bytes": 758,
+      "sha256": "05388f5c6c5b2c29916e18fbd947810d9f3e8b2394341cbdc883d1d23733b146"
+    },
+    {
+      "path": "source/fpga/nexysa7_uart_ethernet.xdc",
+      "bytes": 4250,
+      "sha256": "e5f22d47cacca1728c62dcedea8662c2e59ae958fb8830b1233eb120c87a61e8"
+    },
+    {
+      "path": "source/fpga/p16_core_ooc.xdc",
+      "bytes": 509,
+      "sha256": "45aa44e388fd322758d13dc265f32dace65acedb2b43328f12eb28e6d410a394"
+    },
+    {
+      "path": "source/fpga/tiny_mlp_accelerator_banked.vhd",
+      "bytes": 16874,
+      "sha256": "1907094fcd798ad433ebb7775e0f814233b43384c98ec412d2f872829d810cb2"
+    },
+    {
+      "path": "source/fpga/tiny_mlp_core_only_top.vhd",
+      "bytes": 1804,
+      "sha256": "680b45bc2677078dd79288b7e33ea434e2b124c3ce55590b15b3c6d003ac9d66"
+    },
+    {
+      "path": "source/fpga/tiny_mlp_ethernet_top.vhd",
+      "bytes": 5607,
+      "sha256": "8f32a0fb9da6dfeb5b4114a7c77de82d031d40d9bb5e686cb5f0818e01f15efd"
+    },
+    {
+      "path": "source/fpga/tiny_mlp_uart_ethernet_top.vhd",
+      "bytes": 8589,
+      "sha256": "32722bb7419c03fac9b4e4b475627f8bacaa766020d5a7817338b4246b563209"
+    },
+    {
+      "path": "source/fpga/tiny_mlp_uart_top_streaming.vhd",
+      "bytes": 35900,
+      "sha256": "d454ce73287dc0e0303a253860f01f24d02096b1a72e3f026c1bc08ca62dc9f4"
+    },
+    {
+      "path": "source/fpga/uart_parameter_loader.vhd",
+      "bytes": 18340,
+      "sha256": "52bb8f1b35704892c0b148d9ebef3fc4bd946d87f8aa90924ca67678c10b3c0b"
+    },
+    {
+      "path": "source/fpga/vakili_udp_rmii_endpoint.vhd",
+      "bytes": 66995,
+      "sha256": "96a405dd27149db9b465a6715c973de8d244911638b2d7731a5376c24b2d1bca"
+    },
+    {
+      "path": "source/hls/exact/hardware_exact_p16.cpp",
+      "bytes": 5996,
+      "sha256": "18dc5c4db375b4b78d0d0a010aee73414f337540aef363bc65cc2d8194a448e0"
+    },
+    {
+      "path": "source/hls/exact/hardware_exact_p16.h",
+      "bytes": 3288,
+      "sha256": "bfca86187b33f27efc737573b3e9251f6747c48f7bc68bd7ec2e141e9c53c932"
+    },
+    {
+      "path": "source/hls/exact/tb_hardware_exact_p16.cpp",
+      "bytes": 8768,
+      "sha256": "945e96f78d2a812fc9163f6a303779b5cb7f9495403a1c0fafb474d390743f19"
+    },
+    {
+      "path": "source/hls/vakili/tb_vakili_r1_p16.cpp",
+      "bytes": 10535,
+      "sha256": "d9ffca39935b5481c24ad77df57cbd71a5c9b4ba652918f9b4e9e0bf38c155a8"
+    },
+    {
+      "path": "source/hls/vakili/vakili_r1_p16.cpp",
+      "bytes": 9106,
+      "sha256": "308bf77ef8d67f4b04e583afbd8e4afd8b2785eb4e16d6a1717b9ffff1c0ef06"
+    },
+    {
+      "path": "source/hls/vakili/vakili_r1_p16.h",
+      "bytes": 2619,
+      "sha256": "b6b5020b1e9b8350881fa6bc5415821cef7236ee16d6125e31576c70c987a6d2"
+    },
+    {
+      "path": "TEST_CONNECTION.cmd",
+      "bytes": 280,
+      "sha256": "c63cd877317a91cbe85b2950ca4f9401e5fe9c92edfda4e3f9d25dd95b018f28"
+    }
+  ]
+}

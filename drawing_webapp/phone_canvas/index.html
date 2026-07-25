@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#101522">
+  <title>FPGA Live Demo</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main>
+    <div class="rotate-notice">Rotate the phone to landscape</div>
+
+    <section class="workspace">
+      <div class="drawing-pane">
+        <div class="drawing-card">
+          <canvas id="drawing" aria-label="Digit drawing area"></canvas>
+          <p id="hint">Draw a single digit</p>
+          <button id="clear" class="canvas-clear-button" type="button">Clear</button>
+        </div>
+      </div>
+
+      <section class="result-card" aria-live="polite">
+        <div class="result-summary">
+          <section class="normalized-block" aria-label="Normalized FPGA input">
+            <p class="label">FPGA input</p>
+            <div class="input-center">
+              <div class="preview-frame">
+                <img id="normalized" alt="Normalized 28 by 28 input" hidden>
+              </div>
+            </div>
+          </section>
+
+          <section class="prediction-block" aria-label="Prediction result">
+            <p class="label">Predicted digit</p>
+            <div class="prediction-center">
+              <div id="prediction" class="prediction">—</div>
+            </div>
+            <div class="prediction-meta">
+              <div id="message" class="message"></div>
+              <div id="timing" class="timing"></div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="scores" aria-label="Class probabilities">
+          <div class="score-toolbar">
+            <button id="fullscreen" class="fullscreen-button" type="button">Fullscreen</button>
+            <div id="connection" class="status pending"><span></span>Connecting</div>
+          </div>
+          <div class="score-heading">
+            <p class="label">Class probabilities</p>
+            <p class="score-note" title="Softmax probabilities are not calibrated confidence">Model predictions by class (softmax)</p>
+          </div>
+          <div id="score-list"></div>
+        </aside>
+      </section>
+    </section>
+  </main>
+  <script src="/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+:root {
+  color-scheme: dark;
+  --bg: #0b1020;
+  --card: #141b2d;
+  --text: #eef2ff;
+  --muted: #93a0c0;
+  --accent: #5b8cff;
+  --ok: #3ddc97;
+  --bad: #ff6b6b;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+    Helvetica, Arial, sans-serif;
+  line-height: 1.4;
+  font-weight: 400;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}

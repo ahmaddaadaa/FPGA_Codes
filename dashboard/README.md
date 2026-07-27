@@ -21,17 +21,11 @@ Opens on http://localhost:3000
 
 ## Deploy (Render)
 
-Repo root has a `Dockerfile` that builds this `dashboard/` app.
+1. Push this repo to GitHub  
+2. Render → New → Blueprint → select repo  
+3. Open the `https://….onrender.com` URL on PC and phone  
 
-1. Render → New → **Web Service**
-2. Repo: `ahmaddaadaa/FPGA_Codes`, branch `main`
-3. **Root Directory**: leave **empty** (use repo root)
-4. Runtime: **Docker**
-5. Dockerfile path: `Dockerfile`
-
-Or use Blueprint with root `render.yaml`.
-
-After deploy, open the `https://….onrender.com` URL on PC and phone.
+Phone: scan QR on the dashboard, take a photo.
 
 ## Notes
 

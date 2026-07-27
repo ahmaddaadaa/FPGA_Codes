@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useResults } from "./hooks/useResults";
 import PhoneCapture from "./PhoneCapture";
+import DigitCanvas from "./DigitCanvas";
 import "./App.css";
 
 function statusLabel(status) {
@@ -68,16 +69,26 @@ function ConfusionMatrix({ matrixData }) {
 }
 
 function qrImageUrl(text) {
-  return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
+  return `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
     text
   )}`;
 }
 
 function Dashboard() {
-  const { results, inference, original, scaled, status, photoTick, apiUrl } =
-    useResults();
+  const {
+    results,
+    inference,
+    original,
+    scaled,
+    status,
+    photoTick,
+    apiUrl,
+    setInference,
+    setOriginal,
+    setScaled,
+  } = useResults();
 
-  const [showPhone, setShowPhone] = useState(true);
+  const [showQr, setShowQr] = useState(false);
   const [phoneUrl, setPhoneUrl] = useState(null);
 
   const acc = results?.accuracy;
@@ -85,27 +96,22 @@ function Dashboard() {
 
   useEffect(() => {
     let cancelled = false;
-
     async function loadHostInfo() {
       try {
         const res = await fetch(`${apiUrl}/host-info`);
         const data = await res.json();
         if (cancelled) return;
-
         const url =
           data.trustedPhoneUrl ||
           data.publicPhoneUrl ||
-          `${window.location.origin}/?phone=1` ||
-          data.phoneUrls?.[0] ||
-          null;
+          `${window.location.origin}/?phone=1`;
         setPhoneUrl(url);
       } catch {
         if (!cancelled) setPhoneUrl(`${window.location.origin}/?phone=1`);
       }
     }
-
     loadHostInfo();
-    const id = setInterval(loadHostInfo, 5000);
+    const id = setInterval(loadHostInfo, 8000);
     return () => {
       cancelled = true;
       clearInterval(id);
@@ -113,8 +119,14 @@ function Dashboard() {
   }, [apiUrl]);
 
   useEffect(() => {
-    if (photoTick > 0) setShowPhone(false);
+    if (photoTick > 0) setShowQr(false);
   }, [photoTick]);
+
+  function onDrawResult(data, images) {
+    setInference(data);
+    if (images?.originalDataUrl) setOriginal(images.originalDataUrl);
+    if (images?.previewDataUrl) setScaled(images.previewDataUrl);
+  }
 
   return (
     <main className="page">
@@ -125,7 +137,7 @@ function Dashboard() {
             {results
               ? `${results.dataset} · ${results.sample_count} · ${results.source}`
               : "Loading…"}
-            {" · scan QR to send a photo"}
+            {" · draw a digit or use phone"}
           </p>
         </div>
         <div className={`status ${status}`}>
@@ -160,67 +172,64 @@ function Dashboard() {
       </section>
 
       <div className="main">
-        <section className="live-panel">
-          <div className="live-top">
+        <section className="live-panel draw-layout">
+          <div className="draw-top">
             <button
               type="button"
               className="capture-btn"
-              onClick={() => setShowPhone((v) => !v)}
+              onClick={() => setShowQr((v) => !v)}
             >
-              {showPhone ? "Hide QR" : "Send photo from phone"}
+              {showQr ? "Hide phone QR" : "Open on phone"}
             </button>
           </div>
 
-          {showPhone && (
+          {showQr && phoneUrl && (
             <div className="phone-link-panel">
               <p className="phone-link-title">
-                Scan with your phone, then take a photo
+                Scan to draw or take a photo on your phone
               </p>
-              {phoneUrl ? (
-                <>
-                  <img
-                    className="qr"
-                    src={qrImageUrl(phoneUrl)}
-                    alt="QR code"
-                  />
-                  <p className="send-hint">Opens the camera page on your phone</p>
-                  <p className="phone-url-alt">{phoneUrl}</p>
-                </>
-              ) : (
-                <p className="send-hint">Getting link…</p>
-              )}
+              <img className="qr" src={qrImageUrl(phoneUrl)} alt="QR" />
+              <p className="phone-url-alt">{phoneUrl}</p>
             </div>
           )}
 
-          <div className="live-body">
-            <div className="live-col">
-              <p className="panel-label">Photo</p>
-              {original ? (
-                <img className="photo-original" src={original} alt="Original" />
-              ) : (
-                <div className="mnist-placeholder">Waiting</div>
-              )}
-            </div>
+          <div className="draw-row">
+            <DigitCanvas apiUrl={apiUrl} onResult={onDrawResult} compact />
 
-            <div className="live-col">
-              <p className="panel-label">28×28</p>
-              {scaled ? (
-                <img className="mnist-preview" src={scaled} alt="Scaled" />
-              ) : (
-                <div className="mnist-placeholder">—</div>
-              )}
-            </div>
-
-            <div className="live-col pred">
-              <p className="panel-label">Result</p>
-              <div className="digit-big">
-                {inference?.digit != null ? inference.digit : "—"}
+            <div className="draw-side">
+              <div className="live-col">
+                <p className="panel-label">Input / drawing</p>
+                {original ? (
+                  <img
+                    className="photo-original"
+                    src={original}
+                    alt="Drawing"
+                  />
+                ) : (
+                  <div className="mnist-placeholder">—</div>
+                )}
               </div>
-              <p className="live-meta">
-                {inference?.from === "phone"
-                  ? "from phone"
-                  : inference?.source || "waiting"}
-              </p>
+              <div className="live-col">
+                <p className="panel-label">28×28</p>
+                {scaled ? (
+                  <img className="mnist-preview" src={scaled} alt="Scaled" />
+                ) : (
+                  <div className="mnist-placeholder">—</div>
+                )}
+              </div>
+              <div className="live-col pred">
+                <p className="panel-label">Result</p>
+                <div className="digit-big">
+                  {inference?.digit != null ? inference.digit : "—"}
+                </div>
+                <p className="live-meta">
+                  {inference?.from === "draw"
+                    ? "from drawing"
+                    : inference?.from === "phone"
+                      ? "from phone"
+                      : inference?.source || "draw to predict"}
+                </p>
+              </div>
             </div>
           </div>
 

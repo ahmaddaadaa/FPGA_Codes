@@ -140,6 +140,45 @@
   gap: 0.35rem;
 }
 
+.live-panel.draw-layout {
+  gap: 0.4rem;
+}
+
+.draw-top {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.draw-row {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(140px, 0.85fr);
+  gap: 0.45rem;
+}
+
+.draw-side {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 0.35rem;
+  min-height: 0;
+}
+
+.draw-side .live-col {
+  min-height: 0;
+}
+
+.draw-side .photo-original,
+.draw-side .mnist-preview,
+.draw-side .mnist-placeholder {
+  width: min(100%, 100px);
+}
+
+.draw-side .digit-big {
+  font-size: clamp(2rem, 6vh, 3.2rem);
+}
+
 .live-top {
   display: flex;
   align-items: center;

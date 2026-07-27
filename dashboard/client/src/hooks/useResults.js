@@ -124,3 +124,4 @@ export function useResults() {
     apiUrl: API_URL,
   };
 }
+

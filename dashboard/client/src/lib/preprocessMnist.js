@@ -1,8 +1,5 @@
-// Phone/camera photo → same 28×28 prep as drawing_webapp
-import {
-  darkInkToMnist,
-  previewFromPixels,
-} from "./mnistNormalize";
+// Phone photo → same 28×28 calculation as drawing_webapp
+import { photoGrayToMnist, previewFromPixels } from "./mnistNormalize";
 
 function loadImageFromFile(file) {
   return new Promise((resolve, reject) => {
@@ -32,14 +29,16 @@ function makeDisplayDataUrl(img, maxSide = 360) {
 }
 
 /**
- * Same calculation path as strokes / drawing_webapp:
- * detect dark digit → bbox → scale to 20px box → center in 28×28 → quantize 0–127
+ * Photo path (matches drawing_webapp intent):
+ * 1) resize
+ * 2) segment black digit on light paper (like segment_black_digit)
+ * 3) bbox → scale to 20px → center in 28×28 → quantize 0–127
+ *    (same fitAndCenterDigit as strokes)
  */
 export async function preprocessMnistImage(file) {
   const img = await loadImageFromFile(file);
   const originalDataUrl = makeDisplayDataUrl(img);
 
-  // limit processing size (like MAX_PROCESSING_DIMENSION = 800)
   const maxDim = 800;
   const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
   const w = Math.max(1, Math.round(img.width * scale));
@@ -60,11 +59,12 @@ export async function preprocessMnistImage(file) {
     gray[i] = 0.299 * r + 0.587 * g + 0.114 * b;
   }
 
-  const { pixels } = darkInkToMnist(gray, w, h);
+  const { pixels } = photoGrayToMnist(gray, w, h);
 
   return {
     pixels,
-    previewDataUrl: previewFromPixels(pixels),
+    // upscaled pixel look (same style as drawing preview)
+    previewDataUrl: previewFromPixels(pixels, 10),
     originalDataUrl,
   };
 }

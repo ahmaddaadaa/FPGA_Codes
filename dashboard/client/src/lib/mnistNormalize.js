@@ -1,9 +1,6 @@
 /**
- * Same core 28×28 prep as drawing_webapp/preprocessing.py:
- * - DIGIT_BOX_SIZE = 20
- * - place in 28×28
- * - center by intensity mass
- * - quantize to int8 0..127 with scale 127
+ * Core 28×28 prep aligned with drawing_webapp/preprocessing.py:
+ * DIGIT_BOX=20, 28×28 canvas, mass-center, quantize to 0–127.
  */
 
 export const MNIST_SIZE = 28;
@@ -47,10 +44,208 @@ function binaryMask(src, thr = 31) {
   return out;
 }
 
+function boxBlur(src, w, h, radius) {
+  const r = Math.max(1, radius | 0);
+  const tmp = new Float64Array(w * h);
+  const out = new Float64Array(w * h);
+  const inv = 1 / (2 * r + 1);
+
+  // horizontal
+  for (let y = 0; y < h; y++) {
+    let sum = 0;
+    for (let x = -r; x <= r; x++) {
+      sum += src[y * w + Math.min(w - 1, Math.max(0, x))];
+    }
+    for (let x = 0; x < w; x++) {
+      tmp[y * w + x] = sum * inv;
+      const leave = src[y * w + Math.min(w - 1, Math.max(0, x - r))];
+      const enter = src[y * w + Math.min(w - 1, Math.max(0, x + r + 1))];
+      sum += enter - leave;
+    }
+  }
+  // vertical
+  for (let x = 0; x < w; x++) {
+    let sum = 0;
+    for (let y = -r; y <= r; y++) {
+      sum += tmp[Math.min(h - 1, Math.max(0, y)) * w + x];
+    }
+    for (let y = 0; y < h; y++) {
+      out[y * w + x] = sum * inv;
+      const leave = tmp[Math.min(h - 1, Math.max(0, y - r)) * w + x];
+      const enter = tmp[Math.min(h - 1, Math.max(0, y + r + 1)) * w + x];
+      sum += enter - leave;
+    }
+  }
+  return out;
+}
+
+function otsuThreshold(gray, n) {
+  const hist = new Array(256).fill(0);
+  for (let i = 0; i < n; i++) hist[Math.max(0, Math.min(255, gray[i] | 0))]++;
+  let sum = 0;
+  for (let i = 0; i < 256; i++) sum += i * hist[i];
+  let sumB = 0;
+  let wB = 0;
+  let maxVar = 0;
+  let thr = 128;
+  for (let t = 0; t < 256; t++) {
+    wB += hist[t];
+    if (!wB) continue;
+    const wF = n - wB;
+    if (!wF) break;
+    sumB += t * hist[t];
+    const mB = sumB / wB;
+    const mF = (sum - sumB) / wF;
+    const v = wB * wF * (mB - mF) * (mB - mF);
+    if (v > maxVar) {
+      maxVar = v;
+      thr = t;
+    }
+  }
+  return thr;
+}
+
 /**
- * Fit foreground intensity image (ink bright, bg 0) into 28×28 MNIST layout.
- * @param {Uint8Array|Float64Array} component  w*h, bright = ink
- * @param {{x,y,width,height}} bounds
+ * Segment black digit on light paper → binary mask 255=ink (like segment_black_digit).
+ * For clean drawings (pure white bg), falls back to simple threshold.
+ */
+export function segmentBlackDigit(gray, w, h) {
+  const n = w * h;
+  const g = new Float64Array(n);
+  for (let i = 0; i < n; i++) g[i] = gray[i];
+
+  // illumination flatten: gray / blurred_bg
+  const radius = Math.max(8, Math.round(Math.min(w, h) * 0.08));
+  const bg = boxBlur(g, w, h, radius);
+  const flat = new Uint8Array(n);
+  for (let i = 0; i < n; i++) {
+    const b = Math.max(1, bg[i]);
+    flat[i] = Math.max(0, Math.min(255, Math.round((g[i] / b) * 255)));
+  }
+
+  // light blur
+  const flatF = new Float64Array(n);
+  for (let i = 0; i < n; i++) flatF[i] = flat[i];
+  const soft = boxBlur(flatF, w, h, 1);
+  for (let i = 0; i < n; i++) {
+    flat[i] = Math.max(0, Math.min(255, Math.round(soft[i])));
+  }
+
+  // Otsu inverted (dark ink → white mask)
+  const thr = otsuThreshold(flat, n);
+  const mask = new Uint8Array(n);
+  for (let i = 0; i < n; i++) {
+    // THRESH_BINARY_INV: below thr = ink
+    mask[i] = flat[i] < thr + 8 ? 255 : 0;
+  }
+
+  // simple open (erode then dilate) 2x2 then close 3x3 to clean noise
+  morphOpen(mask, w, h, 1);
+  morphClose(mask, w, h, 1);
+
+  // keep largest connected component (approx: keep dense bbox region)
+  return keepLargestBlob(mask, w, h);
+}
+
+function morphOpen(mask, w, h, r) {
+  const er = erode(mask, w, h, r);
+  const di = dilate(er, w, h, r);
+  mask.set(di);
+}
+
+function morphClose(mask, w, h, r) {
+  const di = dilate(mask, w, h, r);
+  const er = erode(di, w, h, r);
+  mask.set(er);
+}
+
+function erode(src, w, h, r) {
+  const out = new Uint8Array(src.length);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      let ok = 255;
+      for (let dy = -r; dy <= r && ok; dy++) {
+        for (let dx = -r; dx <= r; dx++) {
+          const ny = y + dy;
+          const nx = x + dx;
+          if (ny < 0 || nx < 0 || ny >= h || nx >= w || !src[ny * w + nx]) {
+            ok = 0;
+            break;
+          }
+        }
+      }
+      out[y * w + x] = ok;
+    }
+  }
+  return out;
+}
+
+function dilate(src, w, h, r) {
+  const out = new Uint8Array(src.length);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      let ok = 0;
+      for (let dy = -r; dy <= r && !ok; dy++) {
+        for (let dx = -r; dx <= r; dx++) {
+          const ny = y + dy;
+          const nx = x + dx;
+          if (ny >= 0 && nx >= 0 && ny < h && nx < w && src[ny * w + nx]) {
+            ok = 255;
+            break;
+          }
+        }
+      }
+      out[y * w + x] = ok;
+    }
+  }
+  return out;
+}
+
+function keepLargestBlob(mask, w, h) {
+  const seen = new Uint8Array(mask.length);
+  let best = null;
+  let bestArea = 0;
+
+  for (let i = 0; i < mask.length; i++) {
+    if (!mask[i] || seen[i]) continue;
+    const stack = [i];
+    seen[i] = 1;
+    const cells = [];
+    while (stack.length) {
+      const p = stack.pop();
+      cells.push(p);
+      const x = p % w;
+      const y = (p / w) | 0;
+      for (const [dx, dy] of [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ]) {
+        const nx = x + dx;
+        const ny = y + dy;
+        if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+        const ni = ny * w + nx;
+        if (seen[ni] || !mask[ni]) continue;
+        seen[ni] = 1;
+        stack.push(ni);
+      }
+    }
+    if (cells.length > bestArea) {
+      bestArea = cells.length;
+      best = cells;
+    }
+  }
+
+  const out = new Uint8Array(mask.length);
+  if (best) {
+    for (const p of best) out[p] = 255;
+  }
+  return out;
+}
+
+/**
+ * Fit bright-ink (or binary 255) component into 28×28.
  */
 export function fitAndCenterDigit(component, w, h, bounds) {
   const { x, y, width, height } = bounds;
@@ -65,7 +260,6 @@ export function fitAndCenterDigit(component, w, h, bounds) {
   const rw = Math.max(1, Math.round(width * scale));
   const rh = Math.max(1, Math.round(height * scale));
 
-  // resize crop → rw x rh via canvas
   const c1 = document.createElement("canvas");
   c1.width = width;
   c1.height = height;
@@ -86,14 +280,14 @@ export function fitAndCenterDigit(component, w, h, bounds) {
   const ctx2 = c2.getContext("2d", { willReadFrequently: true });
   ctx2.imageSmoothingEnabled = true;
   ctx2.imageSmoothingQuality = "high";
-  ctx2.clearRect(0, 0, rw, rh);
+  ctx2.fillStyle = "#000";
+  ctx2.fillRect(0, 0, rw, rh);
   ctx2.drawImage(c1, 0, 0, rw, rh);
   const resizedData = ctx2.getImageData(0, 0, rw, rh).data;
   let resized = new Uint8Array(rw * rh);
   for (let i = 0; i < rw * rh; i++) resized[i] = resizedData[i * 4];
   restoreContrast(resized, rw * rh);
 
-  // margin like STROKE_OPERATION_MARGIN
   const mw = rw + STROKE_MARGIN * 2;
   const mh = rh + STROKE_MARGIN * 2;
   const padded = new Uint8Array(mw * mh);
@@ -103,24 +297,19 @@ export function fitAndCenterDigit(component, w, h, bounds) {
         resized[row * rw + col];
     }
   }
-  resized = padded;
-  const resizedW = mw;
-  const resizedH = mh;
 
-  // place on 28×28
   let canvas = new Uint8Array(MNIST_SIZE * MNIST_SIZE);
-  const startX = Math.floor((MNIST_SIZE - resizedW) / 2);
-  const startY = Math.floor((MNIST_SIZE - resizedH) / 2);
-  for (let row = 0; row < resizedH; row++) {
-    for (let col = 0; col < resizedW; col++) {
+  const startX = Math.floor((MNIST_SIZE - mw) / 2);
+  const startY = Math.floor((MNIST_SIZE - mh) / 2);
+  for (let row = 0; row < mh; row++) {
+    for (let col = 0; col < mw; col++) {
       const tx = startX + col;
       const ty = startY + row;
       if (tx < 0 || ty < 0 || tx >= MNIST_SIZE || ty >= MNIST_SIZE) continue;
-      canvas[ty * MNIST_SIZE + tx] = resized[row * resizedW + col];
+      canvas[ty * MNIST_SIZE + tx] = padded[row * mw + col];
     }
   }
 
-  // mass center (same as cv2.moments)
   let m00 = 0;
   let m10 = 0;
   let m01 = 0;
@@ -141,7 +330,6 @@ export function fitAndCenterDigit(component, w, h, bounds) {
   let shiftX = target - cx;
   let shiftY = target - cy;
 
-  // bounded shift like _bounded_centering_shift
   const bin = binaryMask(canvas, 0);
   const bb = boundingRect(bin, MNIST_SIZE, MNIST_SIZE, 1);
   if (bb) {
@@ -153,7 +341,6 @@ export function fitAndCenterDigit(component, w, h, bounds) {
     shiftY = Math.min(maxY, Math.max(minY, shiftY));
   }
 
-  // apply integer shift (good enough vs warpAffine for demo)
   const sx = Math.round(shiftX);
   const sy = Math.round(shiftY);
   if (sx !== 0 || sy !== 0) {
@@ -175,7 +362,6 @@ export function fitAndCenterDigit(component, w, h, bounds) {
   }
   restoreContrast(canvas, MNIST_SIZE * MNIST_SIZE);
 
-  // quantize_normalized_image
   const pixels = new Array(MNIST_SIZE * MNIST_SIZE);
   for (let i = 0; i < pixels.length; i++) {
     pixels[i] = Math.max(
@@ -187,12 +373,15 @@ export function fitAndCenterDigit(component, w, h, bounds) {
   return { normalized: canvas, pixels };
 }
 
-export function previewFromPixels(pixels) {
+/** Upscaled pixel preview (like drawing_webapp scale=10) so 28×28 is easy to see */
+export function previewFromPixels(pixels, scale = 10) {
+  const s = MNIST_SIZE;
   const canvas = document.createElement("canvas");
-  canvas.width = MNIST_SIZE;
-  canvas.height = MNIST_SIZE;
+  canvas.width = s * scale;
+  canvas.height = s * scale;
   const ctx = canvas.getContext("2d");
-  const img = ctx.createImageData(MNIST_SIZE, MNIST_SIZE);
+  ctx.imageSmoothingEnabled = false;
+  const img = ctx.createImageData(s, s);
   for (let i = 0; i < 784; i++) {
     const v = Math.round((pixels[i] / 127) * 255);
     img.data[i * 4] = v;
@@ -200,51 +389,48 @@ export function previewFromPixels(pixels) {
     img.data[i * 4 + 2] = v;
     img.data[i * 4 + 3] = 255;
   }
-  ctx.putImageData(img, 0, 0);
+  // draw 28×28 then scale up nearest-neighbor
+  const tiny = document.createElement("canvas");
+  tiny.width = s;
+  tiny.height = s;
+  tiny.getContext("2d").putImageData(img, 0, 0);
+  ctx.drawImage(tiny, 0, 0, s * scale, s * scale);
   return canvas.toDataURL("image/png");
 }
 
 /**
- * Convert a 2D grayscale buffer where dark = ink (photo/drawing style)
- * into MNIST pixels using the webapp fit/center pipeline.
+ * Clean drawing (black ink on white): simple threshold → same fit/center.
  */
-export function darkInkToMnist(gray, w, h) {
-  // gray: Float or Uint8 0..255, lower = darker
-  let sum = 0;
-  for (let i = 0; i < gray.length; i++) sum += gray[i];
-  const mean = sum / gray.length;
-
-  // Build bright-ink image on black bg (webapp mask is 255 on ink after BINARY of foreground)
+export function drawingGrayToMnist(gray, w, h) {
   const component = new Uint8Array(w * h);
-  // if background is bright (paper), ink is dark → invert
-  const darkIsInk = mean > 100;
   for (let i = 0; i < gray.length; i++) {
-    const g = gray[i];
-    if (darkIsInk) {
-      // black digit on white: ink when dark
-      component[i] = g < 200 ? Math.min(255, Math.round(255 - g)) : 0;
-    } else {
-      // already light-ish digit on dark
-      component[i] = g > 40 ? Math.min(255, Math.round(g)) : 0;
-    }
+    // black ink on white
+    component[i] = gray[i] < 200 ? 255 : 0;
   }
-
-  // threshold cleanup
-  for (let i = 0; i < component.length; i++) {
-    if (component[i] < 40) component[i] = 0;
-  }
-
   const bounds = boundingRect(component, w, h, 1);
-  if (!bounds) throw new Error("draw or capture a clearer digit");
-
-  const minSpan = Math.max(4, Math.round(Math.min(w, h) * 0.025));
-  if (Math.max(bounds.width, bounds.height) < minSpan) {
+  if (!bounds) throw new Error("draw a digit first");
+  if (Math.max(bounds.width, bounds.height) < 8) {
     throw new Error("digit is too small — draw larger");
   }
-
-  const area = component.reduce((a, v) => a + (v > 0 ? 1 : 0), 0);
-  const minArea = Math.max(12, Math.round(w * h * 0.00005));
-  if (area < minArea) throw new Error("digit is too small — draw larger");
-
   return fitAndCenterDigit(component, w, h, bounds);
+}
+
+/**
+ * Phone photo: segment black digit (webapp-style) → same fit/center as drawings.
+ */
+export function photoGrayToMnist(gray, w, h) {
+  const mask = segmentBlackDigit(gray, w, h);
+  const bounds = boundingRect(mask, w, h, 1);
+  if (!bounds) throw new Error("no digit found — use dark ink on light paper");
+
+  const minSpan = Math.max(8, Math.round(Math.min(w, h) * 0.03));
+  if (Math.max(bounds.width, bounds.height) < minSpan) {
+    throw new Error("digit too small — fill more of the frame");
+  }
+
+  const area = mask.reduce((a, v) => a + (v ? 1 : 0), 0);
+  if (area < 40) throw new Error("digit too small — fill more of the frame");
+
+  // mask is binary 255 ink → fitAndCenter (same as drawing)
+  return fitAndCenterDigit(mask, w, h, bounds);
 }

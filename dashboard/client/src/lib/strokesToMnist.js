@@ -1,8 +1,5 @@
 // Freehand strokes → same 28×28 prep as drawing_webapp
-import {
-  darkInkToMnist,
-  previewFromPixels,
-} from "./mnistNormalize";
+import { drawingGrayToMnist, previewFromPixels } from "./mnistNormalize";
 
 /**
  * @param {{ points: { x: number, y: number }[] }[]} strokes  normalized 0..1
@@ -17,7 +14,7 @@ export function strokesToMnist(strokes, brushSize = 0.025) {
   canvas.height = size;
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
-  // white bg, black ink (same as drawing_webapp render_strokes)
+  // white bg, black ink (drawing_webapp render_strokes)
   ctx.fillStyle = "#fff";
   ctx.fillRect(0, 0, size, size);
   ctx.strokeStyle = "#050505";
@@ -55,11 +52,11 @@ export function strokesToMnist(strokes, brushSize = 0.025) {
     gray[i] = 0.299 * r + 0.587 * g + 0.114 * b;
   }
 
-  const { pixels } = darkInkToMnist(gray, size, size);
+  const { pixels } = drawingGrayToMnist(gray, size, size);
 
   return {
     pixels,
-    previewDataUrl: previewFromPixels(pixels),
+    previewDataUrl: previewFromPixels(pixels, 10),
     originalDataUrl: canvas.toDataURL("image/png"),
   };
 }

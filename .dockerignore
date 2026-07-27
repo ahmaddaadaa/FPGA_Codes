@@ -1,0 +1,11 @@
+**/node_modules
+**/dist
+**/public
+.git
+**/.DS_Store
+capstone.cache
+capstone.hw
+capstone.sim
+capstone.ip_user_files
+*.xpr
+*.wcfg

@@ -1,73 +1,42 @@
 .digit-canvas-wrap {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.4rem;
   min-height: 0;
   flex: 1;
-}
-
-.digit-canvas-card {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: #fff;
-  touch-action: none;
-}
-
-.digit-canvas {
-  display: block;
   width: 100%;
-  height: 100%;
-  cursor: crosshair;
-  touch-action: none;
-  background: #fff;
 }
 
-.digit-hint {
-  position: absolute;
-  inset: 0;
-  margin: 0;
-  display: grid;
-  place-items: center;
-  color: #8a919c;
-  font-weight: 650;
-  font-size: clamp(0.95rem, 2.2vw, 1.25rem);
-  pointer-events: none;
-  text-align: center;
-  padding: 1rem;
+.digit-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
 }
 
-.digit-clear {
-  position: absolute;
-  left: 50%;
-  bottom: 10px;
-  transform: translateX(-50%);
-  z-index: 2;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+.digit-clear-btn {
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 999px;
-  min-height: 36px;
-  padding: 0.35rem 1.25rem;
-  background: rgba(21, 27, 41, 0.92);
+  min-height: 34px;
+  padding: 0.3rem 0.9rem;
+  background: rgba(255, 255, 255, 0.08);
   color: #eef2ff;
   font: inherit;
   font-weight: 700;
   font-size: 0.8rem;
   cursor: pointer;
-}
-
-.digit-clear:active {
-  transform: translateX(-50%) translateY(1px);
+  flex-shrink: 0;
 }
 
 .digit-msg {
   margin: 0;
   min-height: 1.1em;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: var(--muted, #93a0c0);
-  text-align: center;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .digit-msg.err {
@@ -78,6 +47,63 @@
   color: var(--accent, #5b8cff);
 }
 
+/* White board fills all remaining space */
+.digit-canvas-card {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #fff;
+  touch-action: none;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Phone: large square-ish board using most of the viewport */
+.digit-canvas-wrap.phone-full .digit-canvas-card {
+  flex: 1 1 auto;
+  width: 100%;
+  /* prefer nearly full remaining height */
+  min-height: min(70dvh, 100%);
+  aspect-ratio: 1;
+  max-height: min(72dvh, 100vw - 2rem);
+  margin: 0 auto;
+}
+
 .digit-canvas-wrap.compact .digit-canvas-card {
-  min-height: 160px;
+  min-height: 180px;
+  aspect-ratio: auto;
+  max-height: none;
+}
+
+.digit-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  touch-action: none;
+  background: #fff;
+  /* critical for iOS: whole surface receives points */
+  z-index: 1;
+}
+
+.digit-hint {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  color: #8a919c;
+  font-weight: 650;
+  font-size: clamp(0.95rem, 2.2vw, 1.25rem);
+  pointer-events: none;
+  text-align: center;
+  padding: 1rem;
 }

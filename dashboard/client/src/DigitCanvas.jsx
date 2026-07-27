@@ -7,10 +7,11 @@ const RECOGNITION_DELAY_MS = 550;
 const MIN_POINT_DIST = 0.001;
 
 /**
- * Drawing pad from drawing_webapp/phone_canvas, wired to dashboard infer API.
+ * Drawing pad — full white board is drawable (phone + desktop).
  */
 export default function DigitCanvas({ apiUrl, onResult, compact = false }) {
   const canvasRef = useRef(null);
+  const cardRef = useRef(null);
   const strokesRef = useRef([]);
   const currentRef = useRef(null);
   const timerRef = useRef(null);
@@ -60,29 +61,56 @@ export default function DigitCanvas({ apiUrl, onResult, compact = false }) {
 
   const resize = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const bounds = canvas.getBoundingClientRect();
+    const card = cardRef.current;
+    if (!canvas || !card) return;
+
+    const bounds = card.getBoundingClientRect();
+    const cssW = Math.max(1, bounds.width);
+    const cssH = Math.max(1, bounds.height);
     const dpr = Math.min(window.devicePixelRatio || 1, 3);
-    const w = Math.max(1, Math.round(bounds.width * dpr));
-    const h = Math.max(1, Math.round(bounds.height * dpr));
-    if (canvas.width === w && canvas.height === h) return;
-    canvas.width = w;
-    canvas.height = h;
+    const w = Math.max(1, Math.round(cssW * dpr));
+    const h = Math.max(1, Math.round(cssH * dpr));
+
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w;
+      canvas.height = h;
+    }
+    // keep CSS size locked to the white board
+    canvas.style.width = `${cssW}px`;
+    canvas.style.height = `${cssH}px`;
     redraw();
   }, [redraw]);
 
   useEffect(() => {
     resize();
+    const card = cardRef.current;
+    const ro =
+      typeof ResizeObserver !== "undefined" && card
+        ? new ResizeObserver(() => resize())
+        : null;
+    if (ro && card) ro.observe(card);
     window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
+    window.addEventListener("orientationchange", resize);
+    // second pass after layout (iOS address bar / flex)
+    const t1 = setTimeout(resize, 50);
+    const t2 = setTimeout(resize, 300);
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("orientationchange", resize);
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, [resize]);
 
   function pointFromEvent(event) {
     const canvas = canvasRef.current;
     const bounds = canvas.getBoundingClientRect();
+    const w = bounds.width || 1;
+    const h = bounds.height || 1;
     return {
-      x: Math.min(1, Math.max(0, (event.clientX - bounds.left) / bounds.width)),
-      y: Math.min(1, Math.max(0, (event.clientY - bounds.top) / bounds.height)),
+      x: Math.min(1, Math.max(0, (event.clientX - bounds.left) / w)),
+      y: Math.min(1, Math.max(0, (event.clientY - bounds.top) / h)),
     };
   }
 
@@ -160,68 +188,99 @@ export default function DigitCanvas({ apiUrl, onResult, compact = false }) {
     redraw();
   }
 
-  function onPointerDown(event) {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-    event.preventDefault();
-    cancelTimer();
-    cancelInfer();
-    currentRef.current = { points: [pointFromEvent(event)] };
-    strokesRef.current = [...strokesRef.current, currentRef.current];
-    canvasRef.current.setPointerCapture(event.pointerId);
-    redraw();
-  }
+  // native listeners with passive:false so iOS doesn't steal the gesture
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  function onPointerMove(event) {
-    if (!currentRef.current) return;
-    event.preventDefault();
-    const events = event.getCoalescedEvents?.() || [event];
-    for (const e of events) {
-      const p = pointFromEvent(e);
-      const pts = currentRef.current.points;
-      const prev = pts[pts.length - 1];
-      if (
-        prev &&
-        Math.hypot(p.x - prev.x, p.y - prev.y) < MIN_POINT_DIST
-      ) {
-        continue;
+    function onPointerDown(event) {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      event.preventDefault();
+      event.stopPropagation();
+      cancelTimer();
+      cancelInfer();
+      currentRef.current = { points: [pointFromEvent(event)] };
+      strokesRef.current = [...strokesRef.current, currentRef.current];
+      try {
+        canvas.setPointerCapture(event.pointerId);
+      } catch {
+        // ignore
       }
-      pts.push(p);
+      redraw();
     }
-    redraw();
-  }
 
-  function onPointerUp(event) {
-    if (!currentRef.current) return;
-    event.preventDefault();
-    currentRef.current.points.push(pointFromEvent(event));
-    currentRef.current = null;
-    if (canvasRef.current.hasPointerCapture(event.pointerId)) {
-      canvasRef.current.releasePointerCapture(event.pointerId);
+    function onPointerMove(event) {
+      if (!currentRef.current) return;
+      event.preventDefault();
+      const events = event.getCoalescedEvents?.() || [event];
+      for (const e of events) {
+        const p = pointFromEvent(e);
+        const pts = currentRef.current.points;
+        const prev = pts[pts.length - 1];
+        if (
+          prev &&
+          Math.hypot(p.x - prev.x, p.y - prev.y) < MIN_POINT_DIST
+        ) {
+          continue;
+        }
+        pts.push(p);
+      }
+      redraw();
     }
-    redraw();
-    timerRef.current = setTimeout(recognize, RECOGNITION_DELAY_MS);
-  }
+
+    function onPointerUp(event) {
+      if (!currentRef.current) return;
+      event.preventDefault();
+      currentRef.current.points.push(pointFromEvent(event));
+      currentRef.current = null;
+      try {
+        if (canvas.hasPointerCapture(event.pointerId)) {
+          canvas.releasePointerCapture(event.pointerId);
+        }
+      } catch {
+        // ignore
+      }
+      redraw();
+      timerRef.current = setTimeout(recognize, RECOGNITION_DELAY_MS);
+    }
+
+    const opts = { passive: false };
+    canvas.addEventListener("pointerdown", onPointerDown, opts);
+    canvas.addEventListener("pointermove", onPointerMove, opts);
+    canvas.addEventListener("pointerup", onPointerUp, opts);
+    canvas.addEventListener("pointercancel", onPointerUp, opts);
+    // iOS fallbacks
+    canvas.addEventListener("touchstart", (e) => e.preventDefault(), opts);
+    canvas.addEventListener("touchmove", (e) => e.preventDefault(), opts);
+
+    return () => {
+      canvas.removeEventListener("pointerdown", onPointerDown);
+      canvas.removeEventListener("pointermove", onPointerMove);
+      canvas.removeEventListener("pointerup", onPointerUp);
+      canvas.removeEventListener("pointercancel", onPointerUp);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [redraw, apiUrl, onResult]);
 
   return (
-    <div className={`digit-canvas-wrap ${compact ? "compact" : ""}`}>
-      <div className="digit-canvas-card">
+    <div className={`digit-canvas-wrap ${compact ? "compact" : "phone-full"}`}>
+      <div className="digit-toolbar">
+        <button type="button" className="digit-clear-btn" onClick={clearAll}>
+          Clear
+        </button>
+        <span className={`digit-msg ${error ? "err" : ""} ${busy ? "busy" : ""}`}>
+          {message || (busy ? "Working…" : "Draw anywhere on the board")}
+        </span>
+      </div>
+
+      <div ref={cardRef} className="digit-canvas-card">
         <canvas
           ref={canvasRef}
           className="digit-canvas"
           aria-label="Draw a digit"
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
         />
         {hint && <p className="digit-hint">Draw a single digit</p>}
-        <button type="button" className="digit-clear" onClick={clearAll}>
-          Clear
-        </button>
       </div>
-      <p className={`digit-msg ${error ? "err" : ""} ${busy ? "busy" : ""}`}>
-        {message || (busy ? "Working…" : " ")}
-      </p>
     </div>
   );
 }

@@ -2,12 +2,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { strokesToMnist } from "./lib/strokesToMnist";
 import "./DigitCanvas.css";
 
+// From drawing_webapp/phone_canvas/app.js
+// https://github.com/ahmaddaadaa/FPGA_Codes/tree/main/drawing_webapp/phone_canvas
 const BRUSH_SIZE = 0.025;
 const RECOGNITION_DELAY_MS = 550;
 const MIN_POINT_DIST = 0.001;
 
 /**
- * Drawing pad — full white board is drawable (phone + desktop).
+ * Drawing pad (adapted from drawing_webapp/phone_canvas).
+ * Full white board is drawable on phone + desktop.
  */
 export default function DigitCanvas({ apiUrl, onResult, compact = false }) {
   const canvasRef = useRef(null);

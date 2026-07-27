@@ -1,6 +1,6 @@
 # MNIST FPGA Dashboard
 
-Local + deployable dashboard for MNIST FPGA results, with phone photo capture.
+Dashboard for MNIST FPGA results: confusion matrix, draw/photo digit input, 28×28 preview, live WebSocket updates.
 
 ## Dev
 
@@ -17,17 +17,26 @@ npm run dev
 npm run prod
 ```
 
-Opens on http://localhost:3000
-
 ## Deploy (Render)
 
-1. Push this repo to GitHub  
-2. Render → New → Blueprint → select repo  
-3. Open the `https://….onrender.com` URL on PC and phone  
+From the **FPGA_Codes** monorepo root (has root `Dockerfile`):
 
-Phone: scan QR on the dashboard, take a photo.
+1. Connect repo `ahmaddaadaa/FPGA_Codes` on Render  
+2. Root Directory empty, Docker runtime  
+3. Open the `https://….onrender.com` URL  
+
+Live example: https://fpga-codes.onrender.com  
+
+## References
+
+See **[REFERENCES.md](./REFERENCES.md)** for mappings to:
+
+- `drawing_webapp/` (canvas + preprocessing)  
+- Vakili MNIST P16 / FPGA host input format  
+
+Upstream monorepo: https://github.com/ahmaddaadaa/FPGA_Codes  
 
 ## Notes
 
-- Mock inference until FPGA UDP is wired  
-- Camera works best on HTTPS (Render free TLS)  
+- Inference is mock until FPGA UDP is connected  
+- Camera works best on HTTPS (Render TLS)  

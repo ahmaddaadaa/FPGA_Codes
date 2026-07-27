@@ -1,15 +1,24 @@
 /**
- * Core 28×28 prep aligned with drawing_webapp/preprocessing.py:
- * DIGIT_BOX=20, 28×28 canvas, mass-center, quantize to 0–127.
+ * Core 28×28 prep aligned with drawing_webapp/preprocessing.py
+ * (https://github.com/ahmaddaadaa/FPGA_Codes/tree/main/drawing_webapp)
+ *
+ * Ported concepts:
+ * - DIGIT_BOX_SIZE = 20, MNIST_SIZE = 28
+ * - _fit_and_center_digit (scale + place + mass center)
+ * - quantize_normalized_image (0..127, scale 127)
+ * - photo mask ≈ segment_black_digit (flatten / threshold / largest blob)
+ *
+ * Also consistent with FPGA host input: 784 int8 activations 0–127.
  */
 
 export const MNIST_SIZE = 28;
 export const DIGIT_BOX_SIZE = 20;
 export const INPUT_SCALE = 127;
-const STROKE_MARGIN = 2;
-const EDGE_MARGIN = 1;
+const STROKE_MARGIN = 2; // preprocessing.STROKE_OPERATION_MARGIN
+const EDGE_MARGIN = 1; // preprocessing.CENTERING_EDGE_MARGIN
 
 function restoreContrast(buf, n) {
+  // preprocessing._restore_foreground_contrast
   let peak = 0;
   for (let i = 0; i < n; i++) if (buf[i] > peak) peak = buf[i];
   if (peak <= 0) return buf;
@@ -50,7 +59,6 @@ function boxBlur(src, w, h, radius) {
   const out = new Float64Array(w * h);
   const inv = 1 / (2 * r + 1);
 
-  // horizontal
   for (let y = 0; y < h; y++) {
     let sum = 0;
     for (let x = -r; x <= r; x++) {
@@ -63,7 +71,6 @@ function boxBlur(src, w, h, radius) {
       sum += enter - leave;
     }
   }
-  // vertical
   for (let x = 0; x < w; x++) {
     let sum = 0;
     for (let y = -r; y <= r; y++) {
@@ -106,15 +113,14 @@ function otsuThreshold(gray, n) {
 }
 
 /**
- * Segment black digit on light paper → binary mask 255=ink (like segment_black_digit).
- * For clean drawings (pure white bg), falls back to simple threshold.
+ * Approximate preprocessing.segment_black_digit for photos
+ * (illumination flatten + Otsu inv + morph + largest component).
  */
 export function segmentBlackDigit(gray, w, h) {
   const n = w * h;
   const g = new Float64Array(n);
   for (let i = 0; i < n; i++) g[i] = gray[i];
 
-  // illumination flatten: gray / blurred_bg
   const radius = Math.max(8, Math.round(Math.min(w, h) * 0.08));
   const bg = boxBlur(g, w, h, radius);
   const flat = new Uint8Array(n);
@@ -123,7 +129,6 @@ export function segmentBlackDigit(gray, w, h) {
     flat[i] = Math.max(0, Math.min(255, Math.round((g[i] / b) * 255)));
   }
 
-  // light blur
   const flatF = new Float64Array(n);
   for (let i = 0; i < n; i++) flatF[i] = flat[i];
   const soft = boxBlur(flatF, w, h, 1);
@@ -131,19 +136,14 @@ export function segmentBlackDigit(gray, w, h) {
     flat[i] = Math.max(0, Math.min(255, Math.round(soft[i])));
   }
 
-  // Otsu inverted (dark ink → white mask)
   const thr = otsuThreshold(flat, n);
   const mask = new Uint8Array(n);
   for (let i = 0; i < n; i++) {
-    // THRESH_BINARY_INV: below thr = ink
     mask[i] = flat[i] < thr + 8 ? 255 : 0;
   }
 
-  // simple open (erode then dilate) 2x2 then close 3x3 to clean noise
   morphOpen(mask, w, h, 1);
   morphClose(mask, w, h, 1);
-
-  // keep largest connected component (approx: keep dense bbox region)
   return keepLargestBlob(mask, w, h);
 }
 
@@ -244,9 +244,7 @@ function keepLargestBlob(mask, w, h) {
   return out;
 }
 
-/**
- * Fit bright-ink (or binary 255) component into 28×28.
- */
+/** preprocessing._fit_and_center_digit (JS port) */
 export function fitAndCenterDigit(component, w, h, bounds) {
   const { x, y, width, height } = bounds;
   const crop = new Uint8Array(width * height);
@@ -310,6 +308,7 @@ export function fitAndCenterDigit(component, w, h, bounds) {
     }
   }
 
+  // mass center ≈ cv2.moments
   let m00 = 0;
   let m10 = 0;
   let m01 = 0;
@@ -330,6 +329,7 @@ export function fitAndCenterDigit(component, w, h, bounds) {
   let shiftX = target - cx;
   let shiftY = target - cy;
 
+  // preprocessing._bounded_centering_shift
   const bin = binaryMask(canvas, 0);
   const bb = boundingRect(bin, MNIST_SIZE, MNIST_SIZE, 1);
   if (bb) {
@@ -362,6 +362,7 @@ export function fitAndCenterDigit(component, w, h, bounds) {
   }
   restoreContrast(canvas, MNIST_SIZE * MNIST_SIZE);
 
+  // preprocessing.quantize_normalized_image
   const pixels = new Array(MNIST_SIZE * MNIST_SIZE);
   for (let i = 0; i < pixels.length; i++) {
     pixels[i] = Math.max(
@@ -373,7 +374,7 @@ export function fitAndCenterDigit(component, w, h, bounds) {
   return { normalized: canvas, pixels };
 }
 
-/** Upscaled pixel preview (like drawing_webapp scale=10) so 28×28 is easy to see */
+/** Preview like run.py image_data_url(..., scale=10) */
 export function previewFromPixels(pixels, scale = 10) {
   const s = MNIST_SIZE;
   const canvas = document.createElement("canvas");
@@ -389,7 +390,6 @@ export function previewFromPixels(pixels, scale = 10) {
     img.data[i * 4 + 2] = v;
     img.data[i * 4 + 3] = 255;
   }
-  // draw 28×28 then scale up nearest-neighbor
   const tiny = document.createElement("canvas");
   tiny.width = s;
   tiny.height = s;
@@ -398,13 +398,10 @@ export function previewFromPixels(pixels, scale = 10) {
   return canvas.toDataURL("image/png");
 }
 
-/**
- * Clean drawing (black ink on white): simple threshold → same fit/center.
- */
+/** Clean black-on-white drawing (after render_strokes in run.py) */
 export function drawingGrayToMnist(gray, w, h) {
   const component = new Uint8Array(w * h);
   for (let i = 0; i < gray.length; i++) {
-    // black ink on white
     component[i] = gray[i] < 200 ? 255 : 0;
   }
   const bounds = boundingRect(component, w, h, 1);
@@ -415,9 +412,7 @@ export function drawingGrayToMnist(gray, w, h) {
   return fitAndCenterDigit(component, w, h, bounds);
 }
 
-/**
- * Phone photo: segment black digit (webapp-style) → same fit/center as drawings.
- */
+/** Phone photo → segment then same fit/center as drawings */
 export function photoGrayToMnist(gray, w, h) {
   const mask = segmentBlackDigit(gray, w, h);
   const bounds = boundingRect(mask, w, h, 1);
@@ -431,6 +426,5 @@ export function photoGrayToMnist(gray, w, h) {
   const area = mask.reduce((a, v) => a + (v ? 1 : 0), 0);
   if (area < 40) throw new Error("digit too small — fill more of the frame");
 
-  // mask is binary 255 ink → fitAndCenter (same as drawing)
   return fitAndCenterDigit(mask, w, h, bounds);
 }

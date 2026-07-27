@@ -1,4 +1,12 @@
-// Phone photo → same 28×28 calculation as drawing_webapp
+/**
+ * Phone/camera image → same 28×28 pipeline as drawings.
+ *
+ * Uses mnistNormalize.photoGrayToMnist (segment + fit/center/quantize),
+ * matching drawing_webapp/preprocessing.py concepts.
+ *
+ * Source: https://github.com/ahmaddaadaa/FPGA_Codes/tree/main/drawing_webapp
+ * FPGA input format: 784×int8 (0–127), see Vakili MNIST host tooling.
+ */
 import { photoGrayToMnist, previewFromPixels } from "./mnistNormalize";
 
 function loadImageFromFile(file) {
@@ -28,17 +36,11 @@ function makeDisplayDataUrl(img, maxSide = 360) {
   return canvas.toDataURL("image/jpeg", 0.72);
 }
 
-/**
- * Photo path (matches drawing_webapp intent):
- * 1) resize
- * 2) segment black digit on light paper (like segment_black_digit)
- * 3) bbox → scale to 20px → center in 28×28 → quantize 0–127
- *    (same fitAndCenterDigit as strokes)
- */
 export async function preprocessMnistImage(file) {
   const img = await loadImageFromFile(file);
   const originalDataUrl = makeDisplayDataUrl(img);
 
+  // preprocessing.MAX_PROCESSING_DIMENSION ≈ 800
   const maxDim = 800;
   const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
   const w = Math.max(1, Math.round(img.width * scale));
@@ -63,7 +65,6 @@ export async function preprocessMnistImage(file) {
 
   return {
     pixels,
-    // upscaled pixel look (same style as drawing preview)
     previewDataUrl: previewFromPixels(pixels, 10),
     originalDataUrl,
   };

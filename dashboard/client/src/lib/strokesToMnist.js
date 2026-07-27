@@ -1,9 +1,17 @@
-// Freehand strokes → same 28×28 prep as drawing_webapp
+/**
+ * Rasterize freehand strokes then run the shared MNIST normalizer.
+ *
+ * Stroke rendering follows drawing_webapp/run.py → render_strokes
+ * (white background, black ink, round brush).
+ * Normalization: drawing_webapp/preprocessing.py (via mnistNormalize.js).
+ *
+ * Source: https://github.com/ahmaddaadaa/FPGA_Codes/tree/main/drawing_webapp
+ */
 import { drawingGrayToMnist, previewFromPixels } from "./mnistNormalize";
 
 /**
  * @param {{ points: { x: number, y: number }[] }[]} strokes  normalized 0..1
- * @param {number} brushSize  fraction of min side
+ * @param {number} brushSize  fraction of min side (phone_canvas BRUSH_SIZE)
  */
 export function strokesToMnist(strokes, brushSize = 0.025) {
   if (!strokes?.length) throw new Error("draw a digit first");
@@ -14,7 +22,6 @@ export function strokesToMnist(strokes, brushSize = 0.025) {
   canvas.height = size;
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
-  // white bg, black ink (drawing_webapp render_strokes)
   ctx.fillStyle = "#fff";
   ctx.fillRect(0, 0, size, size);
   ctx.strokeStyle = "#050505";

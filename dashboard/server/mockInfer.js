@@ -1,7 +1,9 @@
 /**
- * Better stand-in for the FPGA MLP until UDP is wired.
- * Uses simple shape features on 28x28 ink (0–127) so phone digits
- * behave more like a real classifier than a random strip heuristic.
+ * Placeholder classifier until FPGA UDP / integer MLP is wired.
+ * Shape features on 28×28 ink (0–127) for demos only — not trained weights.
+ *
+ * Real path (not used here): Vakili MNIST P16 host infer → 10 logits + cycles
+ * https://github.com/ahmaddaadaa/FPGA_Codes/tree/main/Vakili_P16_FPGA
  */
 
 function toGrid(pixels) {

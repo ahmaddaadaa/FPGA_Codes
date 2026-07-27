@@ -1,3 +1,14 @@
+/**
+ * MNIST FPGA dashboard API + WebSocket.
+ *
+ * Serves React UI in production; /api/infer accepts 784 int8 pixels (0–127)
+ * prepared by the client (drawing_webapp-style 28×28 prep).
+ *
+ * Related:
+ * - drawing_webapp: https://github.com/ahmaddaadaa/FPGA_Codes/tree/main/drawing_webapp
+ * - FPGA host/model: https://github.com/ahmaddaadaa/FPGA_Codes/tree/main/Vakili_P16_FPGA
+ * - See REFERENCES.md in this package
+ */
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
